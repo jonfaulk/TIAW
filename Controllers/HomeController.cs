@@ -3,7 +3,7 @@ using System.Diagnostics;
 using TIAW.Models;
 using System.Collections.Generic;
 
-namespace teste1.Controllers
+namespace TIAW.Controllers
 {
     public class HomeController : Controller
     {
@@ -20,24 +20,32 @@ namespace teste1.Controllers
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult Cadastro()
         {
             ViewBag.Clientes = cadastro.ListarClientes();
             return View();
         }
-
 
         [HttpPost]
-        public IActionResult Privacy(string nome, string email)
+        public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
         {
-            ClienteModel cliente = new ClienteModel(nome, email);
-            cadastro.AdicionarCliente(cliente);
-
             ViewBag.Clientes = cadastro.ListarClientes();
+            ViewBag.Injury = injury;
+
+            if (injury == "sim" && string.IsNullOrEmpty(injuryDetails))
+            {
+                ModelState.AddModelError("injuryDetails", "Por favor, descreva sua lesão.");
+            }
+
+            if (ModelState.IsValid)
+            {
+                ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
+                cadastro.AdicionarCliente(cliente);
+                return RedirectToAction("Index");
+            }
+
             return View();
         }
-
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

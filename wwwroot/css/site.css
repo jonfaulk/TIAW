@@ -34,8 +34,9 @@ footer {
     background-color: #000000;
     color: #fff;
     text-align: center;
-    padding: 4px;
+    padding: 10px;
     width: 100%;
+    margin-top: auto;
 }
 
 
@@ -45,7 +46,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color:#000000;
+    background-color: #000000;
 }
 
 header {
@@ -65,18 +66,18 @@ nav {
     text-align: center;
 }
 
-nav a {
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
-    margin: 0 5px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
-}
+    nav a {
+        color: #fff;
+        text-decoration: none;
+        padding: 10px 20px;
+        margin: 0 5px;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
 
-nav a:hover {
-    background-color: #000000;
-}
+        nav a:hover {
+            background-color: #000000;
+        }
 
 section {
     color: #000000;
@@ -94,43 +95,43 @@ section {
     margin-bottom: 30px;
 }
 
-.feature img {
-    max-width: 100%;
-}
-.feature h2 {
-    background-color: rgba(252, 122, 0, 0.925);
-    margin-top: 10px;
-}
+    .feature img {
+        max-width: 100%;
+    }
 
-.feature h3 {
-    background-color: rgba(252, 122, 0, 0.925);
-}
+    .feature h2 {
+        color: black;
+        background-color: rgba(252, 122, 0, 0.925);
+        margin-top: 10px;
+    }
 
-.feature p{
-    color: #fff;
-}
+    .feature h3 {
+        background-color: rgba(252, 122, 0, 0.925);
+    }
 
-button{
+    .feature p {
+        color: #fff;
+    }
+
+button {
     border-radius: 5px;
     background-color: rgba(252, 122, 0, 0.925);
     padding: 10px 20px;
 }
-    
-.tit 
-{     
+
+.tit {
     text-align: center;
     margin-bottom: 20px;
     color: rgba(252, 122, 0, 0.925);
     text-decoration: underline;
 }
-    
-.tit img 
-{
- max-width: 80%;
-}
 
-.frase{
-    color:white;
+    .tit img {
+        max-width: 80%;
+    }
+
+.frase {
+    color: white;
 }
 
 .split {
@@ -139,9 +140,9 @@ button{
 }
 
 
-.split .feature {
-    width: calc(50% - 15px);
-}
+    .split .feature {
+        width: calc(50% - 15px);
+    }
 
 
 /*fim css index*/
@@ -157,52 +158,39 @@ button{
     text-align: center;
 }
 
-.cor{
-color: rgba(252, 122, 0, 0.925);
+.cor {
+    color: rgba(252, 122, 0, 0.925);
 }
 
 /*fim css sobre*/
 
 /*inicio css contato*/
 
-section .contato{
+section .contato {
     padding: 20px;
 }
 
 form label {
     display: block;
     margin-bottom: 5px;
-}
-
-form input[type="text"],
-form input[type="email"],
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    color: white; /* Alterado para branco */
-}
-
-.contato input[type="text"],
-.contato input[type="email"],
-.contato textarea {
     color: white;
 }
 
+
 form button {
-    background-color: #FFA500;
+    background-color: rgba(252, 122, 0, 0.925);
     color: black;
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
     cursor: pointer;
+    box-sizing: border-box;
 }
 
-form button:hover {
-    background-color: #FFD700;
-}
+    form button:hover {
+        background-color: #f0efe8;
+        box-sizing: border-box;
+    }
 
 nav a .contato {
     color: #fff;
@@ -217,81 +205,119 @@ nav a .contato {
     color: white;
 }
 
-.contato .talk{
+.contato .talk {
     text-decoration: underline;
     color: white;
+    text-align: center;
 }
-
 
 
 /*fim css contato*/
 
 /*inicio css login*/
 
-.login form {
-    max-width: 300px;
-    margin: 0 auto;
+.login-container {
+    width: 300px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: black;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
 }
 
-.login input[type="email"],
-.login input[type="password"] {
+h2 {
+    color: orange;
+}
+
+
+button {
+    background-color: orange;
+    color: white;
+    cursor: pointer;
+}
+
+    button:hover {
+        background-color: #ff9900;
+    }
+/*fim csss login*/
+
+/*inicio css cadsatro*/
+
+.signup-container {
+    width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    background-color: rgb(253, 253, 253);
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+h2 {
+    color: orange;
+}
+
+form label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+    text-align: left;
+    color: white;
+}
+
+select.custom-select {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: rgb(255, 255, 255);
+    box-shadow: orange;
+    box-sizing: border-box;
+}
+
+    select.custom-select option {
+        background-color: black;
+        color: white;
+    }
+
+/*usado no cadastro, contato e login: */
+form input[type="nome"],
+form input[type="email"],
+form input[type="text"],
+form input[type="password"],
+form input[type="text"],
+form input[type="number"],
+select,
+textarea {
     width: 100%;
     padding: 10px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
     border-radius: 5px;
-    border: 1px solid #ccc;
+    box-sizing: border-box;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
 }
+/*fim */
 
-.login button {
+button {
     width: 100%;
-    padding: 10px;
-    background-color: white;
+    background-color: orange;
     color: white;
     border: none;
+    padding: 10px;
     border-radius: 5px;
     cursor: pointer;
 }
 
-.login button:hover {
-    background-color: black;
+    button:hover {
+        background-color: #ff9900;
+    }
+
+h2.cadastro {
+    color: white;
+    text-align: center;
+    text-decoration: underline;
 }
 
-.login .input-field {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 20px;
-    border: none;
-    border-radius: 6px;
-    background-color: #f5f5f5;
-    font-size: 16px;
-    color: #333;
-    transition: background-color 0.3s, color 0.3s;
-}
 
-.login .input-field:focus {
-    background-color: #fff;
-    color: #555;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.login .input-field::placeholder {
-    color: #888;
-}
-
-.login button[type="submit"] {
-    width: 100%;
-    padding: 15px;
-    border: none;
-    border-radius: 6px;
-    background-color: #ff4500;
-    color: #fff;
-    font-size: 18px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-}
-
-.login button[type="submit"]:hover {
-    background-color: #ff6a36;
-}
-
-/*fim csss login*/
+/*fim csss cadastro*/
