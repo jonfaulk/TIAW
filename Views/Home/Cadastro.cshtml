@@ -72,6 +72,7 @@
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>$(document).ready(function () {
+            // Evento para verificar a condição de lesão
             $('input[name="injury"]').change(function () {
                 if ($('#injuryYes').is(':checked')) {
                     $('#injuryDescription').removeClass('d-none');
@@ -79,5 +80,20 @@
                     $('#injuryDescription').addClass('d-none');
                 }
             });
+
+            // Evento para verificar a consistência das senhas
+            $('#confirmPassword').blur(function () {
+                var password = $('#password').val();
+                var confirmPassword = $('#confirmPassword').val();
+                if (password !== confirmPassword) {
+                    $('#confirmPassword')[0].setCustomValidity('As senhas não correspondem.');
+                } else {
+                    $('#confirmPassword')[0].setCustomValidity('');
+                }
+            });
         });</script>
 }
+
+
+
+
