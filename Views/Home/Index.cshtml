@@ -1,9 +1,36 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
-<div class="text-center">
-    <h1 class="display-4">Teste</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
-
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <title>@ViewData["Title"]</title>
+</head>
+<body>
+    <section>
+        <div class="container">
+            <div class="tit">
+                <img src="/imagens/gym.jpg" alt="Gym Image">
+               
+                <span><h2>ACADEMIA SNATFIT</h2></span>
+                <h3 class="frase">O primeiro passo na academia é o começo da sua melhor versão.</h3>
+            </div>
+            <div class="split">
+                <div class="feature">
+                    <img src="/imagens/treino.jpg" alt="Fitness Class">
+                    <h2>AQUI SEU CORPO É SEU PALCO. VAMOS JUNTOS!</h2>
+                    <p>Já possuo cadastro. </p>
+                    <button type="button">Login</button>
+                </div>
+                <div class="feature">
+                    <img src="/imagens/treino.jpg" alt="Personal Trainer">
+                    <h2>TRANSFORME SUOR EM CONQUISTAS. VAMOS JUNTOS!</h2>
+                    <p>Faça o seu cadastro aqui e comece hoje!</p>
+                    <button type="button">Cadastre-se</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
