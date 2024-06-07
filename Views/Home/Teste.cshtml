@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Teste";
+}
+
+@if (ViewBag.Clientes != null && ViewBag.Clientes.Count > 0)
+{
+    <h3>Clientes cadastrados:</h3>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Idade</th>
+                <th>Sexo</th>
+                <th>Lesão</th>
+                <th>Objetivo</th>
+                <th>Detalhes da Lesão</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var cliente in ViewBag.Clientes)
+            {
+                <tr>
+                    <td>@cliente.Id</td>
+                    <td>@cliente.FullName</td>
+                    <td>@cliente.Email</td>
+                    <td>@cliente.Idade</td>
+                    <td>@cliente.Sexo</td>
+                    <td>@cliente.Injury</td>
+                    <td>@cliente.Conte</td>
+                    <td>@cliente.InjuryDetails</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

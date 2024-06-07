@@ -20,32 +20,37 @@ namespace TIAW.Controllers
             return View();
         }
 
+
         public IActionResult Cadastro()
         {
             ViewBag.Clientes = cadastro.ListarClientes();
             return View();
         }
 
+        public IActionResult Teste()
+        {
+            ViewBag.Clientes = cadastro.ListarClientes();
+            return View();
+        }
+
+
         [HttpPost]
         public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
         {
+
+            ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
+            cadastro.AdicionarCliente(cliente);
+
             ViewBag.Clientes = cadastro.ListarClientes();
-            ViewBag.Injury = injury;
-
-            if (injury == "sim" && string.IsNullOrEmpty(injuryDetails))
-            {
-                ModelState.AddModelError("injuryDetails", "Por favor, descreva sua lesão.");
-            }
-
-            if (ModelState.IsValid)
-            {
-                ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
-                cadastro.AdicionarCliente(cliente);
-                return RedirectToAction("Index");
-            }
-
             return View();
         }
+
+        public IActionResult Contato()
+        {
+            return View();
+        }
+
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

@@ -20,17 +20,30 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <div class="nav-link-custom">
+                                @Html.ActionLink("Login", "Login", "Home")
+                                <p>Contato</p>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Cadastro">Cadastro</a>
+                            <div class="nav-link-custom">
+                                @Html.ActionLink("Cadastro", "Cadastro", "Home")
+                                <p>Cadastro</p>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                            <div class="nav-link-custom">
+                                @Html.ActionLink("Contato", "Contato", "Home")
+                                <p>Login</p>
+                            </div>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Contato">Contato</a>
+                            <div class="nav-link-custom">
+                                @Html.ActionLink("Teste", "Teste", "Home")
+                                <p>Teste</p>
+                            </div>
                         </li>
+
                     </ul>
                 </div>
             </div>

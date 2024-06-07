@@ -3,41 +3,37 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+
 <div class="container">
+    <h2 class="cadastro">CADASTRO</h2>
     <div class="form-container">
         <form asp-action="Cadastro" method="post" class="mt-5">
 
-            <!-- Campo para Nome Completo -->
             <div class="form-group">
                 <label for="fullName">Informe seu nome completo:</label>
                 <input type="text" id="fullName" name="fullName" class="form-control" required>
             </div>
 
-            <!-- Campo para Email -->
             <div class="form-group">
                 <label for="email">Informe seu email:</label>
                 <input type="email" id="email" name="email" class="form-control" required>
             </div>
 
-            <!-- Campo para Senha -->
             <div class="form-group">
                 <label for="password">Digite uma senha de 8 dígitos:</label>
                 <input type="password" id="password" name="password" class="form-control" minlength="8" required>
             </div>
 
-            <!-- Campo para Confirmar Senha -->
             <div class="form-group">
                 <label for="confirmPassword">Confirme a senha:</label>
                 <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" minlength="8" required>
             </div>
 
-            <!-- Campo para Idade -->
             <div class="form-group">
                 <label for="idade">Informe sua idade:</label>
                 <input type="number" id="idade" name="idade" class="form-control" min="0" required>
             </div>
 
-            <!-- Campo para Selecionar Sexo -->
             <div class="form-group">
                 <label for="sexo">Selecione seu sexo:</label>
                 <select id="sexo" name="sexo" class="form-control" required>
@@ -46,7 +42,6 @@
                 </select>
             </div>
 
-            <!-- Campo para Lesão Anterior -->
             <div class="form-group">
                 <label>Você já teve alguma lesão anteriormente?</label>
                 <div>
@@ -57,25 +52,32 @@
                 </div>
             </div>
 
-            <!-- Campo para Descrição de Lesão (visível se "Sim" for selecionado) -->
-            @if (ViewBag.Injury == "sim")
-            {
-                <div class="form-group">
-                    <label for="injuryDetails">Descreva:</label>
-                    <textarea id="injuryDetails" name="injuryDetails" class="form-control"></textarea>
-                </div>
-            }
+            <div class="form-group d-none" id="injuryDescription">
+                <label for="injuryDetails">Descreva:</label>
+                <textarea id="injuryDetails" name="injuryDetails" class="form-control"></textarea>
+            </div>
 
-            <!-- Campo para Objetivo na Academia -->
             <div class="form-group">
                 <label for="conte">Nos conte um pouco sobre o seu objetivo na academia:</label>
                 <textarea id="conte" name="conte" class="form-control" required></textarea>
             </div>
 
-            <!-- Botão para Enviar -->
             <div class="form-group">
                 <button type="submit" class="btn btn-primary">Enviar</button>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>$(document).ready(function () {
+            $('input[name="injury"]').change(function () {
+                if ($('#injuryYes').is(':checked')) {
+                    $('#injuryDescription').removeClass('d-none');
+                } else {
+                    $('#injuryDescription').addClass('d-none');
+                }
+            });
+        });</script>
+}
