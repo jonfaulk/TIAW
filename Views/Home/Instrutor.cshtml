@@ -53,7 +53,8 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
 
 <div id="opcoesTreino">
     <form id="formOpcoesTreino">
-        <label for="opcaoTreinoSelect">Selecione uma opção de treino:</label>
+        <h2 id="tipoTreinoHeader">Tipo de treino</h2>
+        <label for="opcaoTreinoSelect">Selecione um tipo de treino:</label>
         <select id="opcaoTreinoSelect" name="opcaoTreino">
             <option value="" disabled selected>Selecione</option>
             @foreach (var ficha in fichaTreino.Fichas)
@@ -74,30 +75,12 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
     </form>
 </div>
 
+<button type="button" id="saveFichaTreinoButton">Salvar Ficha de Treino</button>
+
 <script>document.addEventListener('DOMContentLoaded', function () {
         var selectTreinoElement = document.getElementById('opcaoTreinoSelect');
         var formOpcoesFichaTreino = document.getElementById('formOpcoesFichaTreino');
-
-        selectTreinoElement.addEventListener('change', function () {
-            var selectedValue = selectTreinoElement.value;
-
-            fetch(`/api/montarficha?selectedValue=${selectedValue}`)
-                .then(response => response.json())
-                .then(data => {
-                    // Limpa todos os selects de ficha de treino
-                    var selectsFicha = formOpcoesFichaTreino.querySelectorAll('select');
-                    selectsFicha.forEach(function (select) {
-                        select.innerHTML = '<option value="" disabled selected>Selecione</option>';
-                        data.forEach(function (item) {
-                            var option = document.createElement('option');
-                            option.value = item;
-                            option.text = item;
-                            select.appendChild(option);
-                        });
-                    });
-                })
-                .catch(error => console.error('Erro:', error));
-        });
+        var tipoTreinoHeader = document.getElementById('tipoTreinoHeader');
 
         document.getElementById('addExerciseButton').addEventListener('click', function () {
             var newSelect = document.createElement('select');
@@ -137,6 +120,13 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
             });
 
             $('#opcaoTreinoSelect').change(function () {
+                // Clear the second form's selects and labels
+                $('#formOpcoesFichaTreino').find('select:not(#opcaoFichaTreinoSelect)').remove();
+                $('#opcaoFichaTreinoSelect').val('');
+
+                var selectedText = $("#opcaoTreinoSelect option:selected").text();
+                $('#tipoTreinoHeader').text('Tipo de treino: ' + selectedText);
+
                 var opcoesMarcadas = $(this).val();
 
                 $.ajax({
@@ -152,7 +142,47 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
                     }
                 });
             });
+            $('#saveFichaTreinoButton').click(function () {
+
+                var nome = $('#alunosSelecionados tbody tr td:first-child').text();
+
+                // Coleta o tipo de treino selecionado
+                var tipoSelecionado = $('#opcaoTreinoSelect').val();
+
+                // Coleta os exercícios selecionados
+                var exercicios = [];
+                $('.opcaoFichaTreinoSelect').each(function () {
+                    exercicios.push($(this).val());
+                });
+
+                // Envia os dados para o servidor
+                $.ajax({
+                    url: '/Home/SuaAcao',
+                    type: 'POST',
+                    data: {
+                        nome: nome,
+                        tipoSelecionado: tipoSelecionado,
+                        exercicios: JSON.stringify(exercicios)
+                    },
+                    success: function (response) {
+                        console.log('Resposta recebida:', response); // Verifica a resposta no console
+                        if (response.success) {
+                            alert('Ficha de Treino salva com sucesso!');
+                        } else {
+                            alert('Ocorreu um erro ao salvar a Ficha de Treino.');
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.error('Erro na requisição AJAX:', error); // Exibe erros no console
+                        alert('Erro na requisição AJAX. Verifique o console para mais detalhes.');
+                    }
+                });
+
+            });
+
         });
+
+
     });</script>
 
 @section Scripts {

@@ -4,7 +4,9 @@
     {
         public string NomeAluno { get; set; }
         public string Tipo { get; set; }
+        public string TipoSelecionado { get; set; }
         public List<string> Fichas { get; set; }
+        public List<string> Exercicios { get; set; }
 
 
         public FichaTreino()
@@ -17,11 +19,11 @@
             };
         }
 
-        public FichaTreino(string nomeAluno, string tipo)
+        public FichaTreino(string nome, string tipoSelecionado, List<string> exercicios)
         {
-            NomeAluno = nomeAluno;
-            Tipo = tipo;
-            Fichas = MontarFicha(tipo);
+            NomeAluno = nome;
+            TipoSelecionado = tipoSelecionado;
+            Exercicios = exercicios;
         }
 
         public static List<string> MontarFicha(string opcoesMarcadas)
@@ -85,5 +87,10 @@
                 };
             }
         }
+
+
+
+
+       
     }
 }

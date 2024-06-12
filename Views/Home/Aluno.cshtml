@@ -1,0 +1,33 @@
+﻿
+
+@{
+    ViewData["Title"] = "Aluno";
+}
+
+<h1>FICHA DE TREINO</h1>
+
+@if (Model != null)
+{
+    <h2>@ViewBag.nome</h2>
+    <h3>@ViewBag.tipoTreino</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Exercício</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var exercicio in ViewBag.Exercicios)
+            {
+                <tr>
+                    <td>@exercicio</td>
+                    <td>@exercicio</td>
+                    <td>@exercicio</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+   
+}

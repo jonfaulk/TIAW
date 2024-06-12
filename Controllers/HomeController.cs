@@ -43,6 +43,7 @@ namespace TIAW.Controllers
             ViewBag.Clientes = cadastro.ListarClientes();
             return View();
         }
+       
 
         public IActionResult Contato()
         {
@@ -50,6 +51,11 @@ namespace TIAW.Controllers
         }
 
         public IActionResult Sobre()
+        {
+            return View();
+        }
+
+        public IActionResult Aluno()
         {
             return View();
         }
@@ -82,7 +88,22 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
+        [HttpPost]
+        public ActionResult SuaAcao(string nome, string tipoSelecionado, List<string> exercicios)
+        {
+            // Cria um objeto FichaTreino usando os dados recebidos
+            var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
 
+            // Preenche a ViewBag com os dados
+            ViewBag.nome = fichaTreino.NomeAluno;
+            ViewBag.tipoTreino = fichaTreino.TipoSelecionado;
+            ViewBag.listaExercicios = fichaTreino.Exercicios;
+     
+
+            // Lógica para salvar a ficha de treino (não implementada aqui)
+
+            return Json(new { success = true });
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
