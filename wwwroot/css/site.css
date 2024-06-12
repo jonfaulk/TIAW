@@ -58,6 +58,10 @@ h1 {
     margin: 0;
 }
 
+p {
+    color: white;
+}
+
 .nav-link-custom {
     display: flex;
     align-items: center;
@@ -163,7 +167,7 @@ section .contato {
 
 form label {
     display: block;
-    margin-bottom: 5px;
+    margin-bottom: 100px;
     color: white;
 }
 
@@ -319,6 +323,8 @@ h2.cadastro {
         margin-right: 8px; /* Espaço entre o rádio e o label */
     }
 
-
+tr {
+    color: white;
+}
 
 /*fim csss cadastro*/

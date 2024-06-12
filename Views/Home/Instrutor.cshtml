@@ -1,0 +1,160 @@
+﻿@{
+    ViewBag.Title = "Instrutor";
+    var fichaTreino = new TIAW.Models.FichaTreino();
+}
+
+<h2>Pesquisar Alunos</h2>
+
+<form method="get" action="@Url.Action("Instrutor", "Home")">
+    <label for="searchTerm">Nome do Aluno:</label>
+    <input type="text" id="searchTerm" name="searchTerm" value="@ViewBag.SearchTerm" />
+    <input type="submit" value="Pesquisar" />
+</form>
+
+@if (ViewBag.Clientes != null && ((List<TIAW.Models.ClienteModel>)ViewBag.Clientes).Count > 0)
+{
+    <h3>Resultados da Pesquisa:</h3>
+    <table class="table" id="resultadosPesquisa">
+        <thead>
+            <tr>
+                <th>Nome do Aluno</th>
+                <th>Adicionar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var cliente in ViewBag.Clientes)
+            {
+                <tr>
+                    <td>@cliente.FullName</td>
+                    <td>
+                        <button type="button" class="add-aluno" data-fullname="@cliente.FullName" data-fichatreino="@cliente.Conte">Adicionar</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
+{
+    <p>Nenhum aluno encontrado.</p>
+}
+
+<h2>Alunos Selecionados:</h2>
+<table class="table" id="alunosSelecionados">
+    <thead>
+        <tr>
+            <th>Nome do Aluno</th>
+            <th>Remover</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div id="opcoesTreino">
+    <form id="formOpcoesTreino">
+        <label for="opcaoTreinoSelect">Selecione uma opção de treino:</label>
+        <select id="opcaoTreinoSelect" name="opcaoTreino">
+            <option value="" disabled selected>Selecione</option>
+            @foreach (var ficha in fichaTreino.Fichas)
+            {
+                <option value="@ficha">@ficha</option>
+            }
+        </select>
+    </form>
+</div>
+
+<div id="opcoesFichaTreino">
+    <form id="formOpcoesFichaTreino">
+        <label for="opcaoFichaTreinoSelect">Selecione uma opção de ficha de treino:</label>
+        <select id="opcaoFichaTreinoSelect" name="opcaoFichaTreino">
+            <option value="" disabled selected>Selecione</option>
+        </select>
+        <button type="button" id="addExerciseButton">Adicionar mais um exercício</button>
+    </form>
+</div>
+
+<script>document.addEventListener('DOMContentLoaded', function () {
+        var selectTreinoElement = document.getElementById('opcaoTreinoSelect');
+        var formOpcoesFichaTreino = document.getElementById('formOpcoesFichaTreino');
+
+        selectTreinoElement.addEventListener('change', function () {
+            var selectedValue = selectTreinoElement.value;
+
+            fetch(`/api/montarficha?selectedValue=${selectedValue}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Limpa todos os selects de ficha de treino
+                    var selectsFicha = formOpcoesFichaTreino.querySelectorAll('select');
+                    selectsFicha.forEach(function (select) {
+                        select.innerHTML = '<option value="" disabled selected>Selecione</option>';
+                        data.forEach(function (item) {
+                            var option = document.createElement('option');
+                            option.value = item;
+                            option.text = item;
+                            select.appendChild(option);
+                        });
+                    });
+                })
+                .catch(error => console.error('Erro:', error));
+        });
+
+        document.getElementById('addExerciseButton').addEventListener('click', function () {
+            var newSelect = document.createElement('select');
+            newSelect.name = 'opcaoFichaTreino';
+            newSelect.classList.add('opcaoFichaTreinoSelect');
+
+            // Adiciona as opções atuais do select principal ao novo select
+            var options = formOpcoesFichaTreino.querySelector('select').querySelectorAll('option');
+            options.forEach(function (option) {
+                var newOption = document.createElement('option');
+                newOption.value = option.value;
+                newOption.text = option.text;
+                newSelect.appendChild(newOption);
+            });
+
+            formOpcoesFichaTreino.insertBefore(newSelect, document.getElementById('addExerciseButton'));
+        });
+
+        $(document).ready(function () {
+            $('.add-aluno').click(function () {
+                var fullName = $(this).data('fullname');
+                var fichaTreino = $(this).data('fichatreino');
+
+                $('#alunosSelecionados tbody').append(
+                    '<tr>' +
+                    '<td>' + fullName + '</td>' +
+                    '<td><button type="button" class="remove-aluno">Remover</button></td>' +
+                    '</tr>'
+                );
+
+                $('#resultadosPesquisa tbody').empty();
+                $('#searchTerm').val('');
+            });
+
+            $(document).on('click', '.remove-aluno', function () {
+                $(this).closest('tr').remove();
+            });
+
+            $('#opcaoTreinoSelect').change(function () {
+                var opcoesMarcadas = $(this).val();
+
+                $.ajax({
+                    type: 'POST',
+                    url: '/Home/GetOpcoesFichaTreino',
+                    data: { 'opcoesMarcadas': opcoesMarcadas },
+                    success: function (data) {
+                        $('#opcaoFichaTreinoSelect').empty();
+                        $('#opcaoFichaTreinoSelect').append('<option value="" disabled selected>Selecione</option>');
+                        $.each(data, function (i, item) {
+                            $('#opcaoFichaTreinoSelect').append('<option value="' + item + '">' + item + '</option>');
+                        });
+                    }
+                });
+            });
+        });
+    });</script>
+
+@section Scripts {
+    <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+}

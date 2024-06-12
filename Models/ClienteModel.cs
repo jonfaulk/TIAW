@@ -7,7 +7,6 @@ namespace TIAW.Models
     {
         private static HashSet<int> ids = new HashSet<int>();
         private static Random random = new Random();
-
         public int Id { get; private set; }
         public string FullName { get; set; }
         public string Email { get; set; }
@@ -28,21 +27,23 @@ namespace TIAW.Models
             this.Sexo = sexo;
             this.Injury = injury;
             this.Conte = conte;
-            this.InjuryDetails = injuryDetails; // Inicializando o novo campo
+            this.InjuryDetails = injuryDetails;
         }
 
-        private int GenerateUniqueId()
+        private ClienteModel() { }
+
+       
+
+        private static int GenerateUniqueId()
         {
             int newId;
             do
             {
-                newId = random.Next(1, 201); // Gera um ID entre 1 e 200
+                newId = random.Next(1, 201);
             } while (ids.Contains(newId));
 
             ids.Add(newId);
             return newId;
         }
-
-       
     }
 }
