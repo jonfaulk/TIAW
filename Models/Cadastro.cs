@@ -6,6 +6,11 @@ namespace TIAW.Models
     {
         private List<ClienteModel> clientes;
 
+        public List<ClienteModel> Clientes
+        {
+            get { return clientes; }
+        }
+
         public Cadastro()
         {
             clientes = new List<ClienteModel>();

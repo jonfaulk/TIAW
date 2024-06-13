@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"]SNATFIT</title>
+    <title>@ViewData["Title"] - SNATFIT</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/TIAW.styles.css" asp-append-version="true" />
@@ -19,18 +19,6 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <div class="nav-link-custom">
-                                @Html.ActionLink("Login", "Login", "Home")
-                                <p>Contato</p>
-                            </div>
-                        </li>
-                        <li class="nav-item">
-                            <div class="nav-link-custom">
-                                @Html.ActionLink("Cadastro", "Cadastro", "Home")
-                                <p>Cadastro</p>
-                            </div>
-                        </li>
                         <li class="nav-item">
                             <div class="nav-link-custom">
                                 @Html.ActionLink("Contato", "Contato", "Home")
@@ -49,6 +37,25 @@
                                 <p>Sobre</p>
                             </div>
                         </li>
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <div class="nav-link-custom">
+                                    @Html.ActionLink("Cadastro", "Cadastro", "Home")
+                                    <p>Cadastro</p>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <div class="nav-link-custom">
+                                    <form asp-controller="Home" asp-action="Logout" method="post">
+                                        <button type="submit" class="btn btn-link nav-link-custom">Logout</button>
+                                    </form>
+                                </div>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -62,7 +69,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - SNATFIT - 2024 SNATFIT Academia Fitness. Todos os direitos reservados <a asp-area="" asp-controller="Home" asp-action="">Privacy</a>
+            &copy; 2024 - SNATFIT Academia Fitness. Todos os direitos reservados <a asp-area="" asp-controller="Home" asp-action="">Privacy</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -71,4 +78,3 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-

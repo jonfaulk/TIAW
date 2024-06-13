@@ -3,6 +3,9 @@ using System.Diagnostics;
 using TIAW.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 
 namespace TIAW.Controllers
 {
@@ -40,8 +43,7 @@ namespace TIAW.Controllers
             ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
             cadastro.AdicionarCliente(cliente);
 
-            ViewBag.Clientes = cadastro.ListarClientes();
-            return View();
+            return RedirectToAction("Index");
         }
 
         public IActionResult Contato()
@@ -82,7 +84,50 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
+        public IActionResult Login()
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> Login(string email, string password)
+        {
+            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email && c.Password == password);
+
+            if (cliente != null)
+            {
+                var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.Name, cliente.FullName),
+                    new Claim(ClaimTypes.Email, cliente.Email)
+                };
+
+                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var authProperties = new AuthenticationProperties
+                {
+                    // Allow refresh
+                    AllowRefresh = true,
+                    // Persistent authentication
+                    IsPersistent = true,
+                    // Expire time for the authentication ticket
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+                };
+
+                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+                TempData["SuccessMessage"] = "Login realizado com sucesso!";
+                return RedirectToAction("Index", "Home");
+            }
+
+            ViewBag.ErrorMessage = "Email ou senha inválidos.";
+            return View();
+        }
+
+        public async Task<IActionResult> Logout()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index");
+        }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
