@@ -45,7 +45,7 @@ namespace TIAW.Controllers
 
             return RedirectToAction("Index");
         }
-       
+
 
         public IActionResult Contato()
         {
@@ -82,7 +82,7 @@ namespace TIAW.Controllers
             return View();
         }
 
-       
+
         [HttpPost]
         public JsonResult GetOpcoesFichaTreino(string opcoesMarcadas)
         {
@@ -90,7 +90,7 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
-<<<<<<< HEAD
+
         [HttpPost]
         public ActionResult SuaAcao(string nome, string tipoSelecionado, List<string> exercicios)
         {
@@ -101,12 +101,13 @@ namespace TIAW.Controllers
             ViewBag.nome = fichaTreino.NomeAluno;
             ViewBag.tipoTreino = fichaTreino.TipoSelecionado;
             ViewBag.listaExercicios = fichaTreino.Exercicios;
-     
+
 
             // Lógica para salvar a ficha de treino (não implementada aqui)
 
             return Json(new { success = true });
-=======
+        }
+
         public IActionResult Login()
         {
             return View();
@@ -142,7 +143,7 @@ namespace TIAW.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.ErrorMessage = "Email ou senha inv�lidos.";
+            ViewBag.ErrorMessage = "Email ou senha inv�lidos.";
             return View();
         }
 
@@ -150,11 +151,12 @@ namespace TIAW.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index");
->>>>>>> origin/login
+
         }
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
