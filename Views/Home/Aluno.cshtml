@@ -1,33 +1,63 @@
-﻿
-
-@{
+﻿@{
     ViewData["Title"] = "Aluno";
 }
 
 <h1>FICHA DE TREINO</h1>
 
-@if (Model != null)
+@if (!string.IsNullOrEmpty(ViewBag.tipoTreino) && !string.IsNullOrEmpty(ViewBag.nome))
 {
-    <h2>@ViewBag.nome</h2>
-    <h3>@ViewBag.tipoTreino</h3>
+    <h2>Ficha do aluno: @ViewBag.tipoTreino</h2>
+    <h3>Nome do aluno: @ViewBag.nome</h3>
 
-    <table>
-        <thead>
-            <tr>
-                <th>Exercício</th>
-            </tr>
-        </thead>
+    <table class="table table-striped">
         <tbody>
-            @foreach (var exercicio in ViewBag.Exercicios)
+            @if (ViewBag.Exercicios != null && ViewBag.Exercicios is List<string>)
+            {
+                var exercicios = ViewBag.Exercicios as List<string>;
+                if (exercicios.Count > 0)
+                {
+                    @for (int i = 0; i < exercicios.Count; i++)
+                    {
+                        var partes = exercicios[i].Split(',');
+                        <tr>
+                            <td>
+                                <table class="inner-table">
+                                    <tbody>
+                                        <tr>
+                
+                                            <th>Exercícios</th>
+                                        </tr>
+                                        @for (int j = 0; j < partes.Length; j++)
+                                        {
+                                            <tr>
+                                                <td>@(j + 1)</td>
+                                                <td>@partes[j].Trim()</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2">Nenhum exercício encontrado.</td>
+                    </tr>
+                }
+            }
+            else
             {
                 <tr>
-                    <td>@exercicio</td>
-                    <td>@exercicio</td>
-                    <td>@exercicio</td>
+                    <td colspan="2">Nenhum exercício encontrado.</td>
                 </tr>
             }
         </tbody>
-    </table>
 
-   
+    </table>
+}
+else
+{
+    <p>Ficha de treino não encontrada.</p>
 }

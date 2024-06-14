@@ -1,6 +1,5 @@
 ﻿@{
     ViewData["Title"] = "Cadastro";
-    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 
@@ -37,20 +36,23 @@
             <div class="form-group">
                 <label for="sexo">Selecione seu sexo:</label>
                 <select id="sexo" name="sexo" class="form-control" required>
+                    <option value="escolha">Escolha</option>
                     <option value="masculino">Masculino</option>
                     <option value="feminino">Feminino</option>
                 </select>
             </div>
 
             <div class="form-group">
-                <label>Você já teve alguma lesão anteriormente?</label>
-                <div>
-                    <input type="radio" id="injuryYes" name="injury" value="sim" required>
-                    <label for="injuryYes">Sim</label>
-                    <input type="radio" id="injuryNo" name="injury" value="não">
-                    <label for="injuryNo">Não</label>
-                </div>
+                <label for="injury">Você já teve alguma lesão anteriormente?</label>
+                <select id="injury" name="injury" required>
+                    <option value="escolha">Escolha</option>
+                    <option value="sim">Sim</option>
+                    <option value="não">Não</option>
+                </select>
             </div>
+
+
+
 
             <div class="form-group d-none" id="injuryDescription">
                 <label for="injuryDetails">Descreva:</label>
@@ -73,13 +75,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>$(document).ready(function () {
             // Evento para verificar a condição de lesão
-            $('input[name="injury"]').change(function () {
-                if ($('#injuryYes').is(':checked')) {
+            $('#injury').change(function () {
+                if ($(this).val() === 'sim') {
                     $('#injuryDescription').removeClass('d-none');
                 } else {
                     $('#injuryDescription').addClass('d-none');
                 }
             });
+
 
             // Evento para verificar a consistência das senhas
             $('#confirmPassword').blur(function () {

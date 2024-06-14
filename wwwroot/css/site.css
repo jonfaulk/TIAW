@@ -1,20 +1,20 @@
 ﻿html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
@@ -34,14 +34,6 @@ body {
     background-color: rgba(252, 122, 0, 0.925);
 }
 
-footer {
-    background-color: #000000;
-    color: #fff;
-    text-align: center;
-    padding: 10px;
-    width: 100%;
-    margin-top: 100px;
-}
 
 
 /*inicio css index:*/
@@ -79,11 +71,6 @@ section {
     padding: 20px;
 }
 
-.container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
 
 .feature {
     text-align: center;
@@ -221,9 +208,19 @@ nav a .contato {
     text-align: center;
 }
 
+h1 {
+    color: white;
+}
+
 h2 {
     color: orange;
 }
+
+h3 {
+    color: white;
+}
+
+
 
 
 button {
@@ -249,9 +246,6 @@ button {
     text-align: center;
 }
 
-h2 {
-    color: orange;
-}
 
 form label {
     display: block;
@@ -324,7 +318,81 @@ h2.cadastro {
     }
 
 tr {
+    color: orange;
+}
+
+td {
     color: white;
 }
 
-/*fim csss cadastro*/
+/*cadastro*/
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    margin-bottom: 100px; /* Adicione uma margem inferior para evitar que o conteúdo fique atrás do footer */
+}
+
+.cadastro {
+    color: white;
+    text-align: center;
+    text-decoration: underline;
+}
+
+.form-container {
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+    margin-top: 20px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+    .form-group label {
+        color: white;
+    }
+
+.form-control {
+    width: 100%;
+    padding: 10px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 5px;
+    box-sizing: border-box;
+    color: white;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.form-group button {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+
+    .form-group button:hover {
+        background-color: #ff9900;
+    }
+
+.radio-group {
+    display: flex;
+    align-items: center;
+}
+
+    .radio-group input[type="radio"] {
+        margin-right: 8px;
+    }
+
+textarea.form-control {
+    resize: vertical;
+    min-height: 100px; /* Altura mínima para textarea */
+}
+
+

@@ -2,80 +2,84 @@
     ViewBag.Title = "Instrutor";
     var fichaTreino = new TIAW.Models.FichaTreino();
 }
+<div class="container">
+    <h2>Pesquisar Alunos</h2>
 
-<h2>Pesquisar Alunos</h2>
+    <form method="get" action="@Url.Action("Instrutor", "Home")">
+        <label for="searchTerm">Nome do Aluno:</label>
+        <input type="text" id="searchTerm" name="searchTerm" value="@ViewBag.SearchTerm" />
+        <input type="submit" value="Pesquisar" />
+    </form>
 
-<form method="get" action="@Url.Action("Instrutor", "Home")">
-    <label for="searchTerm">Nome do Aluno:</label>
-    <input type="text" id="searchTerm" name="searchTerm" value="@ViewBag.SearchTerm" />
-    <input type="submit" value="Pesquisar" />
-</form>
+    @if (ViewBag.Clientes != null && ((List<TIAW.Models.ClienteModel>)ViewBag.Clientes).Count > 0)
+    {
+        <div class="resultados-pesquisa">
+            <h3>Resultados da Pesquisa:</h3>
+            <table class="table" id="resultadosPesquisa">
+                <thead>
+                    <tr>
+                        <th>Nome do Aluno</th>
+                        <th>Adicionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in ViewBag.Clientes)
+                    {
+                        <tr>
+                            <td>@cliente.FullName</td>
+                            <td>
+                                <button type="button" class="add-aluno" data-fullname="@cliente.FullName" data-fichatreino="@cliente.Conte">Adicionar</button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
+    {
+        <p>Nenhum aluno encontrado.</p>
+    }
 
-@if (ViewBag.Clientes != null && ((List<TIAW.Models.ClienteModel>)ViewBag.Clientes).Count > 0)
-{
-    <h3>Resultados da Pesquisa:</h3>
-    <table class="table" id="resultadosPesquisa">
+    <h2>Alunos Selecionados:</h2>
+    <table class="table" id="alunosSelecionados">
         <thead>
             <tr>
                 <th>Nome do Aluno</th>
-                <th>Adicionar</th>
+                <th>Remover</th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var cliente in ViewBag.Clientes)
-            {
-                <tr>
-                    <td>@cliente.FullName</td>
-                    <td>
-                        <button type="button" class="add-aluno" data-fullname="@cliente.FullName" data-fichatreino="@cliente.Conte">Adicionar</button>
-                    </td>
-                </tr>
-            }
         </tbody>
     </table>
-}
-else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
-{
-    <p>Nenhum aluno encontrado.</p>
-}
 
-<h2>Alunos Selecionados:</h2>
-<table class="table" id="alunosSelecionados">
-    <thead>
-        <tr>
-            <th>Nome do Aluno</th>
-            <th>Remover</th>
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+    <div id="opcoesTreino">
+        <form id="formOpcoesTreino">
+            <h2 id="tipoTreinoHeader">Tipo de treino</h2>
+            <label for="opcaoTreinoSelect">Selecione um tipo de treino:</label>
+            <select id="opcaoTreinoSelect" name="opcaoTreino">
+                <option value="" disabled selected>Selecione</option>
+                @foreach (var ficha in fichaTreino.Fichas)
+                {
+                    <option value="@ficha">@ficha</option>
+                }
+            </select>
+        </form>
+    </div>
 
-<div id="opcoesTreino">
-    <form id="formOpcoesTreino">
-        <h2 id="tipoTreinoHeader">Tipo de treino</h2>
-        <label for="opcaoTreinoSelect">Selecione um tipo de treino:</label>
-        <select id="opcaoTreinoSelect" name="opcaoTreino">
-            <option value="" disabled selected>Selecione</option>
-            @foreach (var ficha in fichaTreino.Fichas)
-            {
-                <option value="@ficha">@ficha</option>
-            }
-        </select>
-    </form>
+    <div id="opcoesFichaTreino">
+        <form id="formOpcoesFichaTreino">
+            <label for="opcaoFichaTreinoSelect">Selecione uma opção de ficha de treino:</label>
+            <select id="opcaoFichaTreinoSelect" name="opcaoFichaTreino">
+                <option value="" disabled selected>Selecione</option>
+            </select>
+            <button type="button" id="addExerciseButton">Adicionar mais um exercício</button>
+        </form>
+    </div>
+
+    <button type="button" id="saveFichaTreinoButton">Salvar Ficha de Treino</button>
 </div>
 
-<div id="opcoesFichaTreino">
-    <form id="formOpcoesFichaTreino">
-        <label for="opcaoFichaTreinoSelect">Selecione uma opção de ficha de treino:</label>
-        <select id="opcaoFichaTreinoSelect" name="opcaoFichaTreino">
-            <option value="" disabled selected>Selecione</option>
-        </select>
-        <button type="button" id="addExerciseButton">Adicionar mais um exercício</button>
-    </form>
-</div>
-
-<button type="button" id="saveFichaTreinoButton">Salvar Ficha de Treino</button>
 
 <script>document.addEventListener('DOMContentLoaded', function () {
         var selectTreinoElement = document.getElementById('opcaoTreinoSelect');
@@ -143,19 +147,13 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
                 });
             });
             $('#saveFichaTreinoButton').click(function () {
-
                 var nome = $('#alunosSelecionados tbody tr td:first-child').text();
-
-                // Coleta o tipo de treino selecionado
                 var tipoSelecionado = $('#opcaoTreinoSelect').val();
-
-                // Coleta os exercícios selecionados
                 var exercicios = [];
                 $('.opcaoFichaTreinoSelect').each(function () {
                     exercicios.push($(this).val());
                 });
 
-                // Envia os dados para o servidor
                 $.ajax({
                     url: '/Home/SuaAcao',
                     type: 'POST',
@@ -165,19 +163,19 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
                         exercicios: JSON.stringify(exercicios)
                     },
                     success: function (response) {
-                        console.log('Resposta recebida:', response); // Verifica a resposta no console
                         if (response.success) {
                             alert('Ficha de Treino salva com sucesso!');
+                            // Redireciona para a página do aluno
+                            window.location.href = '/Home/Aluno?nome=' + nome;
                         } else {
                             alert('Ocorreu um erro ao salvar a Ficha de Treino.');
                         }
                     },
                     error: function (xhr, status, error) {
-                        console.error('Erro na requisição AJAX:', error); // Exibe erros no console
+                        console.error('Erro na requisição AJAX:', error);
                         alert('Erro na requisição AJAX. Verifique o console para mais detalhes.');
                     }
                 });
-
             });
 
         });
@@ -188,3 +186,87 @@ else if (!string.IsNullOrEmpty((string)ViewBag.SearchTerm))
 @section Scripts {
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
 }
+
+<style>
+    .container {
+        max-width: 1200px;
+        margin: 20px auto 100px; /* Adicionei uma margem inferior de 100px para evitar que o conteúdo fique atrás do footer */
+        padding: 0 20px;
+    }
+
+    h2 {
+        color: white;
+        margin-top: 30px;
+    }
+
+    h3 {
+        color: white;
+        margin-top: 20px;
+    }
+
+    form {
+        margin-bottom: 20px;
+    }
+
+    .resultados-pesquisa {
+        margin-top: 20px;
+    }
+
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+    }
+
+        table th, table td {
+            border: 1px solid white;
+            padding: 8px;
+            color: white;
+            text-align: left;
+        }
+
+    .add-aluno {
+        background-color: orange;
+        color: white;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        .add-aluno:hover {
+            background-color: #ff9900;
+        }
+
+    #opcoesTreino, #opcoesFichaTreino {
+        margin-top: 30px;
+    }
+
+    #formOpcoesTreino, #formOpcoesFichaTreino {
+        margin-top: 20px;
+    }
+
+    #opcaoTreinoSelect, #opcaoFichaTreinoSelect {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        box-sizing: border-box;
+    }
+
+    #addExerciseButton, #saveFichaTreinoButton {
+        margin-top: 20px;
+        padding: 10px 20px;
+        background-color: orange;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+        #addExerciseButton:hover, #saveFichaTreinoButton:hover {
+            background-color: #ff9900;
+        }
+
+
+</style>

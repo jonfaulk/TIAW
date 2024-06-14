@@ -6,6 +6,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace TIAW.Controllers
 {
@@ -13,6 +14,7 @@ namespace TIAW.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private static Cadastro cadastro = new Cadastro();
+        private static List<FichaTreino> fichasTreino = new List<FichaTreino>(); 
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -22,7 +24,6 @@ namespace TIAW.Controllers
         public IActionResult Index()
         {
             return View();
-
         }
 
         public IActionResult Cadastro()
@@ -46,7 +47,6 @@ namespace TIAW.Controllers
             return RedirectToAction("Index");
         }
 
-
         public IActionResult Contato()
         {
             return View();
@@ -57,10 +57,22 @@ namespace TIAW.Controllers
             return View();
         }
 
-        public IActionResult Aluno()
+        public IActionResult Aluno(string nome)
         {
+            var fichaTreino = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
+
+            if (fichaTreino != null)
+            {
+                ViewBag.nome = fichaTreino.NomeAluno;
+                ViewBag.tipoTreino = fichaTreino.TipoSelecionado;
+                ViewBag.Exercicios = fichaTreino.Exercicios;
+                return View();
+            }
+
+            ViewBag.ErrorMessage = "Ficha de treino não encontrada.";
             return View();
         }
+
 
         public IActionResult Instrutor(string searchTerm)
         {
@@ -70,18 +82,17 @@ namespace TIAW.Controllers
             {
                 clientes = clientes.Where(c => c.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
             }
-
             else
             {
                 clientes = new List<ClienteModel>();
             }
+
             FichaTreino fichaTreino = new FichaTreino();
             ViewBag.Fichas = fichaTreino.Fichas;
             ViewBag.Clientes = clientes;
             ViewBag.SearchTerm = searchTerm;
             return View();
         }
-
 
         [HttpPost]
         public JsonResult GetOpcoesFichaTreino(string opcoesMarcadas)
@@ -90,20 +101,25 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
-
         [HttpPost]
         public ActionResult SuaAcao(string nome, string tipoSelecionado, List<string> exercicios)
         {
             // Cria um objeto FichaTreino usando os dados recebidos
             var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
 
-            // Preenche a ViewBag com os dados
-            ViewBag.nome = fichaTreino.NomeAluno;
-            ViewBag.tipoTreino = fichaTreino.TipoSelecionado;
-            ViewBag.listaExercicios = fichaTreino.Exercicios;
-
-
-            // Lógica para salvar a ficha de treino (não implementada aqui)
+            // Verifica se já existe uma ficha para o aluno
+            var fichaExistente = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
+            if (fichaExistente != null)
+            {
+                // Atualiza a ficha existente
+                fichaExistente.TipoSelecionado = tipoSelecionado;
+                fichaExistente.Exercicios = exercicios;
+            }
+            else
+            {
+                // Adiciona a nova ficha à lista
+                fichasTreino.Add(fichaTreino);
+            }
 
             return Json(new { success = true });
         }
@@ -129,11 +145,8 @@ namespace TIAW.Controllers
                 var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 var authProperties = new AuthenticationProperties
                 {
-                    // Allow refresh
                     AllowRefresh = true,
-                    // Persistent authentication
                     IsPersistent = true,
-                    // Expire time for the authentication ticket
                     ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
                 };
 
@@ -143,7 +156,7 @@ namespace TIAW.Controllers
                 return RedirectToAction("Index", "Home");
             }
 
-            ViewBag.ErrorMessage = "Email ou senha inv�lidos.";
+            ViewBag.ErrorMessage = "Email ou senha inválidos.";
             return View();
         }
 
@@ -151,12 +164,9 @@ namespace TIAW.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index");
-
         }
 
-
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });

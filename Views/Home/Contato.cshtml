@@ -1,4 +1,3 @@
-
 ﻿@{
     ViewData["Title"] = "Contato";
 }
@@ -9,24 +8,17 @@
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        #successMessage {
-            display: none;
-            color: green;
-            margin-top: 10px;
-            font-weight: bold;
-        }
-    </style>
+
 </head>
 <body class="Contato">
-    
-﻿<main aria-labelledby="title">
-    <section>
-        <div class="cont">
-            <h2 class="talk">Fale Conosco</h2>
-            <p class="intro">Estamos aqui para responder a quaisquer perguntas que você possa ter sobre a SnatFit. Preencha o formulário abaixo e entraremos em contato o mais rápido possível.</p>
-            <br>
-            <form id="contactForm" action="@Url.Action("Contato", "Home")" method="post" class="form">
+
+    ﻿<main aria-labelledby="title">
+        <section>
+            <div class="cont">
+                <h2 class="talk">Fale Conosco</h2>
+                <p class="intro">Estamos aqui para responder a quaisquer perguntas que você possa ter sobre a SnatFit. Preencha o formulário abaixo e entraremos em contato o mais rápido possível.</p>
+                <br>
+                <form id="contactForm" action="@Url.Action("Contato", "Home")" method="post" class="form">
                     <label for="nome" class="form">Nome:</label>
                     <input type="nome" id="nome" name="nome" required>
 
@@ -43,25 +35,97 @@
                 </form>
 
                 <div id="successMessage">Mensagem enviada com sucesso!</div>
-        </div>
-    </section>
-<<<<<<< HEAD
-
-    @section Scripts {
-        <script>
-            $(document).ready(function() {
-                $('#contactForm').submit(function(event) {
-                    event.preventDefault(); 
-                    $('#successMessage').fadeIn(); 
-                    setTimeout(function() {
-                        $('#successMessage').fadeOut(); 
-                    }, 3000);
-                });
-            });
-        </script>
-    }
+            </div>
+        </section>
+        @section Scripts {
+            <script>$(document).ready(function () {
+                    $('#contactForm').submit(function (event) {
+                        event.preventDefault();
+                        $('#successMessage').fadeIn();
+                        setTimeout(function () {
+                            $('#successMessage').fadeOut();
+                        }, 3000);
+                    });
+                });</script>
+        }
 </body>
+<style>
+    #successMessage {
+        display: none;
+        color: green;
+        margin-top: 10px;
+        font-weight: bold;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        margin-bottom: 100px; /* Adicione uma margem inferior para evitar que o conteúdo fique atrás do footer */
+    }
+
+    .cadastro {
+        color: white;
+        text-align: center;
+        text-decoration: underline;
+    }
+
+    .form-container {
+        background-color: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+        .form-group label {
+            color: white;
+        }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        border: none;
+        border-radius: 5px;
+        box-sizing: border-box;
+        color: white;
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+
+    .form-group button {
+        background-color: orange;
+        color: white;
+        border: none;
+        padding: 10px;
+        border-radius: 5px;
+        cursor: pointer;
+        width: 100%;
+    }
+
+        .form-group button:hover {
+            background-color: #ff9900;
+        }
+
+    .radio-group {
+        display: flex;
+        align-items: center;
+    }
+
+        .radio-group input[type="radio"] {
+            margin-right: 8px;
+        }
+
+    textarea.form-control {
+        resize: vertical;
+        min-height: 100px; /* Altura mínima para textarea */
+    }
+</style>
 </html>
-=======
 </main>
->>>>>>> amigo-branch
+

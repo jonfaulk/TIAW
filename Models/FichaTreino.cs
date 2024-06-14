@@ -34,14 +34,14 @@
 
                 List<string> treino = new List<string>
             {
-                "Desenvolvimento de Ombros com Halteres: 4x8-12, Descanso: 60-90 segundos",
-                    "Elevação Lateral: 3x12-15, Descanso: 45-60 segundos",
-                    "Elevação Frontal: 3x12-15, Descanso: 45-60 segundos",
-                    "Crucifixo Invertido: 3x12-15, Descanso: 45-60 segundos",
-                    "Supino Reto com Barra: 4x8-12, Descanso: 60-90 segundos",
-                    "Supino Inclinado com Halteres: 3x10-12, Descanso: 60-90 segundos",
-                    "Crucifixo com Halteres: 3x12-15, Descanso: 60 segundos",
-                    "Crossover (no cabo): 3x12-15, Descanso: 45-60 segundos"
+                "Desenvolvimento de Ombros com Halteres: 4x8-12 | Descanso: 60-90 segundos",
+                    "Elevação Lateral: 3x12-15 | Descanso: 45-60 segundos",
+                    "Elevação Frontal: 3x12-15 | Descanso: 45-60 segundos",
+                    "Crucifixo Invertido: 3x12-15 | Descanso: 45-60 segundos",
+                    "Supino Reto com Barra: 4x8-12 | Descanso: 60-90 segundos",
+                    "Supino Inclinado com Halteres: 3x10-12 | Descanso: 60-90 segundos",
+                    "Crucifixo com Halteres: 3x12-15 | Descanso: 60 segundos",
+                    "Crossover (no cabo): 3x12-15 | Descanso: 45-60 segundos"
                 };
 
                 return treino;
@@ -52,12 +52,12 @@
 
                 List<string> treino = new List<string>
             {
-                 "Agachamento Livre: 4x8-12, Descanso: 90-120 segundos",
-                    "Leg Press: 4x10-15, Descanso: 90-120 segundos",
-                    "Afundo (com halteres): 3x12-15 (cada perna), Descanso: 60-90 segundos",
-                    "Extensão de Pernas: 3x12-15, Descanso: 60-90 segundos",
-                    "Flexão de Pernas: 3x12-15, Descanso: 60-90 segundos",
-                    "Elevação de Panturrilha: 4x15-20, Descanso: 45-60 segundos"
+                 "Agachamento Livre: 4x8-12 | Descanso: 90-120 segundos",
+                    "Leg Press: 4x10-15 | Descanso: 90-120 segundos",
+                    "Afundo (com halteres): 3x12-15 (cada perna) | Descanso: 60-90 segundos",
+                    "Extensão de Pernas: 3x12-15 | Descanso: 60-90 segundos",
+                    "Flexão de Pernas: 3x12-15 | Descanso: 60-90 segundos",
+                    "Elevação de Panturrilha: 4x15-20 | Descanso: 45-60 segundos"
                 };
 
                 return treino;
@@ -67,13 +67,13 @@
 
                 List<string> treino = new List<string>
             {
-                 "Rosca Direta com Barra: 4x8-12, Descanso: 60-90 segundos",
-                    "Rosca Alternada com Halteres: 3x10-12, Descanso: 60-90 segundos",
-                    "Rosca Scott (com barra EZ): 3x10-12, Descanso: 60-90 segundos",
-                    "Tríceps Pulley: 4x10-12, Descanso: 60-90 segundos",
-                    "Tríceps Francês com Halteres: 3x10-12, Descanso: 60-90 segundos",
-                    "Mergulho entre Bancos: 3x12-15, Descanso: 60-90 segundos",
-                    "Rosca Martelo: 3x12-15, Descanso: 60 segundos"
+                 "Rosca Direta com Barra: 4x8-12 | Descanso: 60-90 segundos",
+                    "Rosca Alternada com Halteres: 3x10-12 | Descanso: 60-90 segundos",
+                    "Rosca Scott (com barra EZ): 3x10-12 | Descanso: 60-90 segundos",
+                    "Tríceps Pulley: 4x10-12 | Descanso: 60-90 segundos",
+                    "Tríceps Francês com Halteres: 3x10-12 | Descanso: 60-90 segundos",
+                    "Mergulho entre Bancos: 3x12-15 | Descanso: 60-90 segundos",
+                    "Rosca Martelo: 3x12-15 | Descanso: 60 segundos"
                 };
 
                 return treino;
