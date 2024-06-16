@@ -14,7 +14,7 @@ namespace TIAW.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private static Cadastro cadastro = new Cadastro();
-        private static List<FichaTreino> fichasTreino = new List<FichaTreino>(); 
+        private static List<FichaTreino> fichasTreino = new List<FichaTreino>();
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -32,11 +32,13 @@ namespace TIAW.Controllers
             return View();
         }
 
+
         public IActionResult Teste()
         {
             ViewBag.Clientes = cadastro.ListarClientes();
             return View();
         }
+
 
         [HttpPost]
         public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
@@ -57,21 +59,7 @@ namespace TIAW.Controllers
             return View();
         }
 
-        public IActionResult Aluno(string nome)
-        {
-            var fichaTreino = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
 
-            if (fichaTreino != null)
-            {
-                ViewBag.nome = fichaTreino.NomeAluno;
-                ViewBag.tipoTreino = fichaTreino.TipoSelecionado;
-                ViewBag.Exercicios = fichaTreino.Exercicios;
-                return View();
-            }
-
-            ViewBag.ErrorMessage = "Ficha de treino não encontrada.";
-            return View();
-        }
 
 
         public IActionResult Instrutor(string searchTerm)
@@ -91,6 +79,7 @@ namespace TIAW.Controllers
             ViewBag.Fichas = fichaTreino.Fichas;
             ViewBag.Clientes = clientes;
             ViewBag.SearchTerm = searchTerm;
+
             return View();
         }
 
@@ -101,12 +90,28 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
-        [HttpPost]
-        public ActionResult SuaAcao(string nome, string tipoSelecionado, List<string> exercicios)
+        public IActionResult Aluno(string nome)
         {
-            // Cria um objeto FichaTreino usando os dados recebidos
-            var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
+            var fichaTreino = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
+            if (fichaTreino != null)
+            {
+                var fichaPerson = TIAW.Models.FichaTreino.FichaPersonalizada(fichaTreino.TipoSelecionado, fichaTreino.Exercicios);
 
+               ViewBag.nome = nome;
+               ViewBag.ListaPerson = fichaPerson;
+                return View();
+            }
+
+            ViewBag.ErrorMessage = "Ficha de treino não encontrada.";
+            return View();
+        }
+
+
+
+        [HttpPost]
+        public IActionResult SaveFichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios)
+        {
+            var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
             // Verifica se já existe uma ficha para o aluno
             var fichaExistente = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
             if (fichaExistente != null)
@@ -123,6 +128,9 @@ namespace TIAW.Controllers
 
             return Json(new { success = true });
         }
+
+
+
 
         public IActionResult Login()
         {

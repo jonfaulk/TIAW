@@ -396,3 +396,148 @@ textarea.form-control {
 }
 
 
+/*INSTRUTOR*/
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto 100px;
+    padding: 0 20px;
+}
+
+h2 {
+    color: white;
+    margin-top: 30px;
+}
+
+h3 {
+    color: white;
+    margin-top: 20px;
+}
+
+form {
+    margin-bottom: 20px;
+}
+
+.resultados-pesquisa {
+    margin-top: 20px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+    table th, table td {
+        border: 1px solid white;
+        padding: 8px;
+        color: white;
+        text-align: left;
+    }
+
+.add-aluno {
+    background-color: orange;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+    .add-aluno:hover {
+        background-color: #ff9900;
+    }
+
+.treinoBlock {
+    margin-top: 30px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #333;
+}
+
+#opcoesTreino, #opcoesFichaTreino {
+    margin-top: 30px;
+}
+
+.formOpcoesTreino, .formOpcoesFichaTreino {
+    margin-top: 20px;
+}
+
+.opcaoTreinoSelect, .opcaoFichaTreinoSelect {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+}
+
+.addExerciseButton, #saveFichaTreinoButton, #createAnotherTrainingButton {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: orange;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.addExerciseButton:hover, #saveFichaTreinoButton:hover, #createAnotherTrainingButton:hover {
+        background-color: #ff9900;
+}
+
+
+/* Estilos para a página de ficha de treino */
+
+.student-info, .exercise-list {
+    margin-bottom: 20px;
+}
+
+.subtitle {
+    background-color: #ff6600; /* Laranja */
+    color: black; /* Manter a cor do texto em preto para contraste adequado */
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.exercise-type {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #333; /* Cinza escuro */
+    border-left: 5px solid #ff6600; /* Laranja */
+}
+
+.type-title {
+    color: #ff6600; /* Laranja */
+    margin-bottom: 10px;
+}
+
+.exercise-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .exercise-table th, .exercise-table td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: left;
+    }
+
+    .exercise-table th {
+        background-color: #ff6600; /* Laranja */
+        color: black; /* Ajuste para texto em preto */
+    }
+
+    .exercise-table tbody tr:nth-child(even) {
+        background-color: #333; /* Cinza escuro para linhas pares */
+    }
+
+p {
+    text-align: center;
+    color: #666;
+    font-style: italic;
+}
+
+
+
+

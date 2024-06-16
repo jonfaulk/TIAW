@@ -1,63 +1,44 @@
 ﻿@{
     ViewData["Title"] = "Aluno";
 }
+<body>
+    <div class="container">
+        <h1 class="title">Ficha de Treino</h1>
 
-<h1>FICHA DE TREINO</h1>
+        <div class="student-info">
+            <h2 class="subtitle">Nome do Aluno : @ViewBag.nome</h2>
+        </div>
 
-@if (!string.IsNullOrEmpty(ViewBag.tipoTreino) && !string.IsNullOrEmpty(ViewBag.nome))
-{
-    <h2>Ficha do aluno: @ViewBag.tipoTreino</h2>
-    <h3>Nome do aluno: @ViewBag.nome</h3>
-
-    <table class="table table-striped">
-        <tbody>
-            @if (ViewBag.Exercicios != null && ViewBag.Exercicios is List<string>)
+        <div class="exercise-list">
+            @if (ViewBag.ListaPerson != null)
             {
-                var exercicios = ViewBag.Exercicios as List<string>;
-                if (exercicios.Count > 0)
+                foreach (var tipo in ViewBag.ListaPerson.Keys)
                 {
-                    @for (int i = 0; i < exercicios.Count; i++)
-                    {
-                        var partes = exercicios[i].Split(',');
-                        <tr>
-                            <td>
-                                <table class="inner-table">
-                                    <tbody>
-                                        <tr>
-                
-                                            <th>Exercícios</th>
-                                        </tr>
-                                        @for (int j = 0; j < partes.Length; j++)
-                                        {
-                                            <tr>
-                                                <td>@(j + 1)</td>
-                                                <td>@partes[j].Trim()</td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </td>
-                        </tr>
-                    }
-                }
-                else
-                {
-                    <tr>
-                        <td colspan="2">Nenhum exercício encontrado.</td>
-                    </tr>
+                    <div class="exercise-type">
+                        <h3 class="type-title">@tipo</h3>
+                        <table class="exercise-table">
+                            <thead>
+                                <tr>
+                                    <th>Exercício</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var exercicio in ViewBag.ListaPerson[tipo])
+                                {
+                                    <tr>
+                                        <td>@exercicio</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
                 }
             }
             else
             {
-                <tr>
-                    <td colspan="2">Nenhum exercício encontrado.</td>
-                </tr>
+                <p>Nenhum exercício encontrado.</p>
             }
-        </tbody>
+        </div>
+    </div>
+</body>
 
-    </table>
-}
-else
-{
-    <p>Ficha de treino não encontrada.</p>
-}
