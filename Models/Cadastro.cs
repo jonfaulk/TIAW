@@ -21,6 +21,11 @@ namespace TIAW.Models
             clientes.Add(cliente);
         }
 
+        public void RemoverCliente(ClienteModel cliente)
+        {
+            Clientes.Remove(cliente);
+        }
+
         public List<ClienteModel> ListarClientes()
         {
             return clientes;

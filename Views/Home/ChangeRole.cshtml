@@ -1,0 +1,21 @@
+﻿@model TIAW.Models.ClienteModel
+@{
+    ViewBag.Title = "Change Role";
+}
+<h2>Change Role</h2>
+
+<form method="post" action="@Url.Action("ChangeRole", "Home")">
+    <div>
+        <label for="email">Email</label>
+        <input type="email" name="email" value="@Model.Email" readonly />
+    </div>
+    <div>
+        <label for="role">Role</label>
+        <select name="role" required>
+            <option value="Aluno" selected="@((Model.Role == "Aluno").ToString())">Aluno</option>
+            <option value="Instrutor" selected="@((Model.Role == "Instrutor").ToString())">Instrutor</option>
+            <option value="Administrador" selected="@((Model.Role == "Administrador").ToString())">Administrador</option>
+        </select>
+    </div>
+    <button type="submit">Change Role</button>
+</form>
