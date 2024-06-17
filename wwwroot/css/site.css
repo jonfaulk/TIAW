@@ -8,9 +8,12 @@
     }
 }
 
+
+
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
+
 
 html {
     position: relative;
@@ -25,7 +28,93 @@ body {
     background-color: #000000;
 }
 
+/* Hover effect for all buttons */
+button:hover,
+.form-group button:hover,
+.add-aluno:hover,
+.addExerciseButton:hover,
+#saveFichaTreinoButton:hover,
+#createAnotherTrainingButton:hover,
+.btn:hover {
+    background-color: #fab67d !important;
+    color: white !important;
+}
 
+
+/* Estilo para a barra de navegação */
+.navbar {
+    background-color: #fd7e14 !important;
+}
+
+/* Estilo para o texto "SNATFIT" */
+.navbar-brand {
+    color: white !important;
+}
+
+/* Estilo para os links da barra de navegação */
+.navbar-nav .nav-link-custom a,
+.navbar-nav .nav-link-custom .btn {
+    color: black !important;
+    text-decoration: none; /* Remover sublinhado */
+}
+
+/* Espaçamento entre os links */
+.navbar-nav .nav-item {
+    margin-right: 20px;
+}
+
+/* Adicionar estilo ao botão de logout */
+.navbar-nav .nav-link-custom .btn {
+    color: black !important;
+}
+
+/* Manter o foco dos botões e links */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* Estilo para o item ativo da navbar */
+.navbar-nav .nav-item.active .nav-link-custom a,
+.navbar-nav .nav-item.active .nav-link-custom .btn {
+    background-color: #d65c0f; /* Cor mais escura para o item ativo */
+    border-radius: 5px; /* Bordas arredondadas para o item ativo */
+    color: white !important;
+}
+
+/* Efeito de hover para os links da navbar */
+.navbar-nav .nav-item:hover .nav-link-custom a,
+.navbar-nav .nav-item:hover .nav-link-custom .btn {
+    background-color: #e67310; /* Cor um pouco mais escura no hover */
+    border-radius: 5px; /* Bordas arredondadas no hover */
+    color: white !important;
+}
+/* Estilo para alinhar itens na navbar */
+.navbar-nav {
+    display: flex;
+    align-items: center;
+}
+
+    .navbar-nav .nav-item {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+    .navbar-nav .nav-link-custom {
+        display: flex;
+        align-items: center;
+        height: 100%;
+    }
+
+        .navbar-nav .nav-link-custom form {
+            margin: 0;
+        }
+
+        .navbar-nav .nav-link-custom button {
+            height: 100%;
+            display: flex;
+            align-items: center;
+        }
 /* css padrão todas as pgs*/
 
 
@@ -482,9 +571,9 @@ table {
     cursor: pointer;
 }
 
-.addExerciseButton:hover, #saveFichaTreinoButton:hover, #createAnotherTrainingButton:hover {
+    .addExerciseButton:hover, #saveFichaTreinoButton:hover, #createAnotherTrainingButton:hover {
         background-color: #ff9900;
-}
+    }
 
 
 /* Estilos para a página de ficha de treino */
@@ -529,7 +618,7 @@ table {
     }
 
     .exercise-table tbody tr:nth-child(even) {
-        background-color: #333; /* Cinza escuro para linhas pares */
+        background-color: #333;
     }
 
 p {
@@ -539,5 +628,17 @@ p {
 }
 
 
+/* Estilo para as opções da caixa de seleção */
+select option {
+    color: black !important;
+    background-color: white !important;
+}
 
+/* Estilo adicional para os controles de seleção */
+select.form-control {
+    color: white;
+}
 
+    select.form-control:focus {
+        color: black;
+    }

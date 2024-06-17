@@ -8,11 +8,11 @@
     <meta charset="utf-8" />
     <title>@ViewData["Title"]</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body class="Contato">
-
-    ﻿<main aria-labelledby="title">
+<body class="Contato d-flex flex-column min-vh-100">
+    <main class="flex-grow-1" aria-labelledby="title">
         <section>
             <div class="cont">
                 <h2 class="talk">Fale Conosco</h2>
@@ -27,7 +27,6 @@
 
                     <label for="mensagem" class="form">Mensagem:</label>
                     <textarea id="mensagem" name="mensagem" required></textarea>
-                    >>>>>>> amigo-branch
 
                     <div>
                         <button type="submit">Enviar Mensagem</button>
@@ -37,17 +36,19 @@
                 <div id="successMessage">Mensagem enviada com sucesso!</div>
             </div>
         </section>
-        @section Scripts {
-            <script>$(document).ready(function () {
-                    $('#contactForm').submit(function (event) {
-                        event.preventDefault();
-                        $('#successMessage').fadeIn();
-                        setTimeout(function () {
-                            $('#successMessage').fadeOut();
-                        }, 3000);
-                    });
-                });</script>
-        }
+    </main>
+    <footer class="bg-dark text-white-50 text-center py-3 mt-auto">
+        &copy; 2024 - SNATFIT Academia Fitness. Todos os direitos reservados.
+    </footer>
+    <script>$(document).ready(function () {
+            $('#contactForm').submit(function (event) {
+                event.preventDefault();
+                $('#successMessage').fadeIn();
+                setTimeout(function () {
+                    $('#successMessage').fadeOut();
+                }, 3000);
+            });
+        });</script>
 </body>
 <style>
     #successMessage {
@@ -61,7 +62,7 @@
         max-width: 1200px;
         margin: 0 auto;
         padding: 0 20px;
-        margin-bottom: 100px; /* Adicione uma margem inferior para evitar que o conteúdo fique atrás do footer */
+        margin-bottom: 50px; /* Adicione uma margem inferior para evitar que o conteúdo fique atrás do footer */
     }
 
     .cadastro {
@@ -125,7 +126,23 @@
         resize: vertical;
         min-height: 100px; /* Altura mínima para textarea */
     }
+
+    /* Adicionando a estilização para manter o footer no rodapé */
+    body {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main {
+        flex: 1;
+    }
+
+    footer {
+        background-color: #000;
+        color: white;
+        padding: 20px 0;
+        text-align: center;
+    }
 </style>
 </html>
-</main>
-
