@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Admin Page";
+}
+
+<h2>Admin Page</h2>
+@if (ViewBag.Message != null)
+{
+    <div>@ViewBag.Message</div>
+}
+<h3>Existing Users</h3>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    @foreach (var cliente in ViewBag.Clientes)
+    {
+        <tr>
+            <td>@cliente.Id</td>
+            <td>@cliente.FullName</td>
+            <td>@cliente.Email</td>
+            <td>@cliente.Role</td>
+            <td>
+                <form asp-action="EditUser" asp-controller="Home" method="get" style="display:inline;">
+                    <input type="hidden" name="id" value="@cliente.Id" />
+                    <button type="submit">Edit</button>
+                </form>
+                <form asp-action="DeleteUser" asp-controller="Home" method="post" style="display:inline;">
+                    <input type="hidden" name="id" value="@cliente.Id" />
+                    <button type="submit">Delete</button>
+                </form>
+                <form asp-action="ChangeRole" asp-controller="Home" method="get" style="display:inline;">
+                    <input type="hidden" name="id" value="@cliente.Id" />
+                    <button type="submit">Change Role</button>
+                </form>
+            </td>
+        </tr>
+    }
+</table>

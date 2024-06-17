@@ -1,0 +1,13 @@
+﻿@model TIAW.Models.ClienteModel
+@{
+    ViewBag.Title = "Delete User";
+}
+<h2>Delete User</h2>
+
+<p>Are you sure you want to delete the user: @Model.FullName?</p>
+
+<form method="post" action="@Url.Action("DeleteUserConfirmed", "Home")">
+    <input type="hidden" name="email" value="@Model.Email" />
+    <button type="submit">Delete</button>
+    <a href="@Url.Action("Admin", "Home")">Cancel</a>
+</form>

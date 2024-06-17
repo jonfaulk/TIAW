@@ -40,6 +40,16 @@
                             <span></span>
 
                         </li>
+                        @if (TempData["LoggedInUserEmail"] != null && ViewBag.UserRole == "Administrador")
+                        {
+                            <li class="nav-item">
+                                <div class="nav-link-custom">
+                                    @Html.ActionLink("Admin", "Admin", "Home")
+                                    <p>Admin</p>
+                                </div>
+                            </li>
+                        }
+
                         @if (!User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">

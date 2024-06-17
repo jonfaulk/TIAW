@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TIAW.Controllers
 {
@@ -173,6 +174,86 @@ namespace TIAW.Controllers
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index");
         }
+
+        public IActionResult Admin()
+        {
+            ViewBag.Clientes = cadastro.ListarClientes();
+            return View();
+        }
+
+        public IActionResult EditUser(int id)
+        {
+            var user = cadastro.Clientes.FirstOrDefault(u => u.Id == id);
+            if (user == null)
+            {
+                return NotFound();
+            }
+            return View(user);
+        }
+
+        [HttpPost]
+        public IActionResult EditUser(ClienteModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = cadastro.Clientes.FirstOrDefault(u => u.Id == model.Id);
+                if (user != null)
+                {
+                    user.FullName = model.FullName;
+                    user.Email = model.Email;
+                    user.Idade = model.Idade;
+                    user.Sexo = model.Sexo;
+                    user.Injury = model.Injury;
+                    user.InjuryDetails = model.InjuryDetails;
+                    user.Role = model.Role;
+                }
+                return RedirectToAction("Admin");
+            }
+            return View(model);
+        }
+
+        public IActionResult DeleteUser(int id)
+        {
+            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            return View(cliente);
+        }
+
+        [HttpPost]
+        public IActionResult DeleteUserConfirmed(string email)
+        {
+            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
+            if (cliente != null)
+            {
+                cadastro.Clientes.Remove(cliente);
+            }
+            return RedirectToAction("Admin");
+        }
+
+        public IActionResult ChangeRole(int id)
+        {
+            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
+            if (cliente == null)
+            {
+                return NotFound();
+            }
+            return View(cliente);
+        }
+
+        [HttpPost]
+        public IActionResult ChangeRole(string email, string role)
+        {
+            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
+            if (cliente != null)
+            {
+                cliente.Role = role;
+            }
+            return RedirectToAction("Admin");
+        }
+
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
