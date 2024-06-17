@@ -41,7 +41,7 @@ namespace TIAW.Controllers
 
         [HttpPost]
         public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
-        {
+        {  
             ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
             cadastro.AdicionarCliente(cliente);
 
@@ -73,7 +73,6 @@ namespace TIAW.Controllers
             ViewBag.ErrorMessage = "Ficha de treino não encontrada.";
             return View();
         }
-
 
         public IActionResult Instrutor(string searchTerm)
         {
@@ -133,7 +132,7 @@ namespace TIAW.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email && c.Password == password);
+            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Email == email && c.Password == password);
 
             if (cliente != null)
             {
@@ -175,7 +174,7 @@ namespace TIAW.Controllers
 
         public IActionResult EditUser(int id)
         {
-            var user = cadastro.Clientes.FirstOrDefault(u => u.Id == id);
+            var user = cadastro.ListarClientes().FirstOrDefault(u => u.Id == id);
             if (user == null)
             {
                 return NotFound();
@@ -188,7 +187,7 @@ namespace TIAW.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = cadastro.Clientes.FirstOrDefault(u => u.Id == model.Id);
+                var user = cadastro.ListarClientes().FirstOrDefault(u => u.Id == model.Id);
                 if (user != null)
                 {
                     user.FullName = model.FullName;
@@ -206,7 +205,7 @@ namespace TIAW.Controllers
 
         public IActionResult DeleteUser(int id)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
+            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -215,19 +214,15 @@ namespace TIAW.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteUserConfirmed(string email)
+        public IActionResult DeleteUserConfirmed(int id)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
-            if (cliente != null)
-            {
-                cadastro.Clientes.Remove(cliente);
-            }
+            cadastro.RemoverCliente(id);
             return RedirectToAction("Admin");
         }
 
         public IActionResult ChangeRole(int id)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
+            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
             if (cliente == null)
             {
                 return NotFound();
@@ -236,16 +231,17 @@ namespace TIAW.Controllers
         }
 
         [HttpPost]
-        public IActionResult ChangeRole(string email, string role)
+        public IActionResult ChangeRole(int id, string role)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
+            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
             if (cliente != null)
             {
                 cliente.Role = role;
+                // Atualizar o papel no banco de dados
+                // Implementar a lógica para atualizar a role do cliente no banco de dados aqui
             }
             return RedirectToAction("Admin");
         }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

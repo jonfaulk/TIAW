@@ -1,11 +1,13 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 
 namespace TIAW.Models
 {
     public class Cadastro
     {
-        private readonly static string _conn = @"Data Source=localhost\MSSQLSERVER01;Initial Catalog=db_Academia;Integrated Security=True;Encrypt=True;Trust Server Certificate=True";
+        private readonly static string _conn = @"Data Source=localhost\MSSQLSERVER01;Initial Catalog=db_Academia;Integrated Security=True;Encrypt=False";
         private List<ClienteModel> clientes;
 
         public List<ClienteModel> Clientes
@@ -16,72 +18,84 @@ namespace TIAW.Models
         public Cadastro()
         {
             clientes = new List<ClienteModel>();
-            CarregarClientesDoBanco();
-        }
-
-        private void CarregarClientesDoBanco()
-        {
-            using (SqlConnection connection = new SqlConnection(_conn))
-            {
-                connection.Open();
-                SqlCommand cmd = new SqlCommand("SELECT Id, FullName, Email, Password, Idade, Sexo, Injury, Conte, InjuryDetails, Role FROM Clientes", connection);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    ClienteModel cliente = new ClienteModel
-                    {
-                        FullName = reader.GetString(1),
-                        Email = reader.GetString(2),
-                        Password = reader.GetString(3),
-                        Idade = reader.GetInt32(4),
-                        Sexo = reader.GetString(5),
-                        Injury = reader.GetString(6),
-                        Conte = reader.GetString(7),
-                        InjuryDetails = reader.GetString(8),
-                        Role = reader.GetString(9)
-                    };
-                    clientes.Add(cliente);
-                }
-            }
         }
 
         public void AdicionarCliente(ClienteModel cliente)
         {
-            using (SqlConnection connection = new SqlConnection(_conn))
+            using (SqlConnection conn = new SqlConnection(_conn))
             {
-                connection.Open();
-                SqlCommand cmd = new SqlCommand("INSERT INTO Clientes (FullName, Email, Password, Idade, Sexo, Injury, Conte, InjuryDetails, Role) VALUES (@FullName, @Email, @Password, @Idade, @Sexo, @Injury, @Conte, @InjuryDetails, @Role); SELECT SCOPE_IDENTITY();", connection);
-                cmd.Parameters.AddWithValue("@FullName", cliente.FullName);
-                cmd.Parameters.AddWithValue("@Email", cliente.Email);
-                cmd.Parameters.AddWithValue("@Password", cliente.Password);
-                cmd.Parameters.AddWithValue("@Idade", cliente.Idade);
-                cmd.Parameters.AddWithValue("@Sexo", cliente.Sexo);
-                cmd.Parameters.AddWithValue("@Injury", cliente.Injury);
-                cmd.Parameters.AddWithValue("@Conte", cliente.Conte);
-                cmd.Parameters.AddWithValue("@InjuryDetails", cliente.InjuryDetails);
-                cmd.Parameters.AddWithValue("@Role", cliente.Role);
+                conn.Open();
+                string query = "INSERT INTO usuarios (nome, email, senha, sexo, data_nascimento, lesao, treina, condicao, objetivo, tipo) " +
+                               "VALUES (@Nome, @Email, @Senha, @Sexo, @DataNascimento, @Lesao, @Treina, @Condicao, @Objetivo, @Tipo)";
 
-                clientes.Add(cliente);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Nome", cliente.FullName);
+                    cmd.Parameters.AddWithValue("@Email", cliente.Email);
+                    cmd.Parameters.AddWithValue("@Senha", cliente.Password);
+                    cmd.Parameters.AddWithValue("@Sexo", cliente.Sexo);
+                    cmd.Parameters.AddWithValue("@DataNascimento", DateTime.Now.AddYears(-cliente.Idade)); // Calcula a data de nascimento
+                    cmd.Parameters.AddWithValue("@Lesao", cliente.Injury ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Treina", cliente.Conte == "Sim");
+                    cmd.Parameters.AddWithValue("@Condicao", cliente.Conte == "Sim");
+                    cmd.Parameters.AddWithValue("@Objetivo", cliente.InjuryDetails ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Tipo", cliente.Role);
+
+                    cmd.ExecuteNonQuery();
+                }
             }
         }
 
-        public void RemoverCliente(ClienteModel cliente)
+        public void RemoverCliente(int matricula)
         {
-            using (SqlConnection connection = new SqlConnection(_conn))
+            using (SqlConnection conn = new SqlConnection(_conn))
             {
-                connection.Open();
-                SqlCommand cmd = new SqlCommand("DELETE FROM Clientes WHERE Id = @Id", connection);
-                cmd.Parameters.AddWithValue("@Id", cliente.Id);
-                cmd.ExecuteNonQuery();
-            }
+                conn.Open();
+                string query = "DELETE FROM usuarios WHERE matricula = @Matricula";
 
-            Clientes.Remove(cliente);
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Matricula", matricula);
+                    cmd.ExecuteNonQuery();
+                }
+            }
         }
 
         public List<ClienteModel> ListarClientes()
         {
-            return clientes;
+            List<ClienteModel> listaClientes = new List<ClienteModel>();
+
+            using (SqlConnection conn = new SqlConnection(_conn))
+            {
+                conn.Open();
+                string query = "SELECT * FROM usuarios";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    using (SqlDataReader reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            ClienteModel cliente = new ClienteModel
+                            {
+                                FullName = reader["nome"].ToString(),
+                                Email = reader["email"].ToString(),
+                                Password = reader["senha"].ToString(),
+                                Sexo = reader["sexo"].ToString(),
+                                Idade = DateTime.Now.Year - Convert.ToDateTime(reader["data_nascimento"]).Year,
+                                Injury = reader["lesao"].ToString(),
+                                Conte = Convert.ToBoolean(reader["treina"]) ? "Sim" : "Não",
+                                InjuryDetails = reader["objetivo"].ToString(),
+                                Role = reader["tipo"].ToString()
+                            };
+
+                            listaClientes.Add(cliente);
+                        }
+                    }
+                }
+            }
+
+            return listaClientes;
         }
     }
 }
