@@ -46,16 +46,43 @@ namespace TIAW.Models
             }
         }
 
-        public void RemoverCliente(int matricula)
+        public void AtualizarCliente(ClienteModel cliente)
         {
             using (SqlConnection conn = new SqlConnection(_conn))
             {
                 conn.Open();
-                string query = "DELETE FROM usuarios WHERE matricula = @Matricula";
+                string query = "UPDATE usuarios SET nome = @Nome, email = @Email, senha = @Senha, sexo = @Sexo, data_nascimento = @DataNascimento, " +
+                               "lesao = @Lesao, treina = @Treina, condicao = @Condicao, objetivo = @Objetivo, tipo = @Tipo WHERE Id = @Id";
 
                 using (SqlCommand cmd = new SqlCommand(query, conn))
                 {
-                    cmd.Parameters.AddWithValue("@Matricula", matricula);
+                    cmd.Parameters.AddWithValue("@Nome", cliente.FullName);
+                    cmd.Parameters.AddWithValue("@Email", cliente.Email);
+                    cmd.Parameters.AddWithValue("@Senha", cliente.Password);
+                    cmd.Parameters.AddWithValue("@Sexo", cliente.Sexo);
+                    cmd.Parameters.AddWithValue("@DataNascimento", DateTime.Now.AddYears(-cliente.Idade)); // Calcula a data de nascimento
+                    cmd.Parameters.AddWithValue("@Lesao", cliente.Injury ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Treina", cliente.Conte == "Sim");
+                    cmd.Parameters.AddWithValue("@Condicao", cliente.Conte == "Sim");
+                    cmd.Parameters.AddWithValue("@Objetivo", cliente.InjuryDetails ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Tipo", cliente.Role);
+                    cmd.Parameters.AddWithValue("@Id", cliente.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+        public void RemoverCliente(int id)
+        {
+            using (SqlConnection conn = new SqlConnection(_conn))
+            {
+                conn.Open();
+                string query = "DELETE FROM usuarios WHERE Id = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Id", id);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -82,7 +109,7 @@ namespace TIAW.Models
                                 Email = reader["email"].ToString(),
                                 Password = reader["senha"].ToString(),
                                 Sexo = reader["sexo"].ToString(),
-                                Idade = DateTime.Now.Year - Convert.ToDateTime(reader["data_nascimento"]).Year,
+                                Idade = CalculateAge(Convert.ToDateTime(reader["data_nascimento"])),
                                 Injury = reader["lesao"].ToString(),
                                 Conte = Convert.ToBoolean(reader["treina"]) ? "Sim" : "Não",
                                 InjuryDetails = reader["objetivo"].ToString(),
@@ -96,6 +123,14 @@ namespace TIAW.Models
             }
 
             return listaClientes;
+        }
+
+        private int CalculateAge(DateTime birthDate)
+        {
+            int age = DateTime.Now.Year - birthDate.Year;
+            if (DateTime.Now.DayOfYear < birthDate.DayOfYear)
+                age--;
+            return age;
         }
     }
 }

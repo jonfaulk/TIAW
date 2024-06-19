@@ -7,6 +7,7 @@ namespace TIAW.Models
     {
         private static HashSet<int> ids = new HashSet<int>();
         private static Random random = new Random();
+
         public int Id { get; private set; }
         public string FullName { get; set; }
         public string Email { get; set; }
@@ -15,9 +16,10 @@ namespace TIAW.Models
         public string Sexo { get; set; }
         public string Injury { get; set; }
         public string Conte { get; set; }
-        public string InjuryDetails { get; set; }  // Novo campo para detalhes da lesão
+        public string InjuryDetails { get; set; }
         public string Role { get; set; }
 
+        // Construtor para criar novos clientes
         public ClienteModel(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
         {
             this.Id = GenerateUniqueId();
@@ -32,20 +34,22 @@ namespace TIAW.Models
             this.Role = "Aluno";
         }
 
+        // Construtor padrão
         public ClienteModel()
         {
-            FullName = string.Empty;
-            Email = string.Empty;
-            Password = string.Empty;
-            Idade = 0;
-            Sexo = string.Empty;
-            Injury = string.Empty;
-            Conte = string.Empty;
-            InjuryDetails = string.Empty;
-            Role = "Aluno";
+            this.Id = GenerateUniqueId();
+            this.FullName = string.Empty;
+            this.Email = string.Empty;
+            this.Password = string.Empty;
+            this.Idade = 0;
+            this.Sexo = string.Empty;
+            this.Injury = string.Empty;
+            this.Conte = string.Empty;
+            this.InjuryDetails = string.Empty;
+            this.Role = "Aluno";
         }
 
-
+        // Gera um ID único
         private static int GenerateUniqueId()
         {
             int newId;

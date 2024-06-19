@@ -8,18 +8,21 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using System.Data.SqlClient;
 
 namespace TIAW.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly static string _conn = @"Data Source=localhost\MSSQLSERVER01;Initial Catalog=db_Academia;Integrated Security=True;Encrypt=False";
         private readonly ILogger<HomeController> _logger;
-        private static Cadastro cadastro = new Cadastro();
+        private readonly Cadastro _cadastro;
         private static List<FichaTreino> fichasTreino = new List<FichaTreino>();
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, Cadastro cadastro)
         {
             _logger = logger;
+            _cadastro = cadastro;
         }
 
         public IActionResult Index()
@@ -27,23 +30,23 @@ namespace TIAW.Controllers
             return View();
         }
 
-        public IActionResult Cadastro()
+        public IActionResult Teste()
         {
-            ViewBag.Clientes = cadastro.ListarClientes();
+            ViewBag.Clientes = _cadastro.ListarClientes();
             return View();
         }
 
-        public IActionResult Teste()
+        public IActionResult Cadastro()
         {
-            ViewBag.Clientes = cadastro.ListarClientes();
+            ViewBag.Clientes = _cadastro.ListarClientes();
             return View();
         }
 
         [HttpPost]
         public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
-        {  
+        {
             ClienteModel cliente = new ClienteModel(fullName, email, password, idade, sexo, injury, conte, injuryDetails);
-            cadastro.AdicionarCliente(cliente);
+            _cadastro.AdicionarCliente(cliente);
 
             return RedirectToAction("Index");
         }
@@ -76,7 +79,7 @@ namespace TIAW.Controllers
 
         public IActionResult Instrutor(string searchTerm)
         {
-            var clientes = cadastro.ListarClientes();
+            var clientes = _cadastro.ListarClientes();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
@@ -104,20 +107,16 @@ namespace TIAW.Controllers
         [HttpPost]
         public ActionResult SuaAcao(string nome, string tipoSelecionado, List<string> exercicios)
         {
-            // Cria um objeto FichaTreino usando os dados recebidos
             var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
 
-            // Verifica se já existe uma ficha para o aluno
             var fichaExistente = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
             if (fichaExistente != null)
             {
-                // Atualiza a ficha existente
                 fichaExistente.TipoSelecionado = tipoSelecionado;
                 fichaExistente.Exercicios = exercicios;
             }
             else
             {
-                // Adiciona a nova ficha à lista
                 fichasTreino.Add(fichaTreino);
             }
 
@@ -132,7 +131,7 @@ namespace TIAW.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(string email, string password)
         {
-            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Email == email && c.Password == password);
+            var cliente = _cadastro.ListarClientes().FirstOrDefault(c => c.Email == email && c.Password == password);
 
             if (cliente != null)
             {
@@ -168,78 +167,97 @@ namespace TIAW.Controllers
 
         public IActionResult Admin()
         {
-            ViewBag.Clientes = cadastro.ListarClientes();
+            ViewBag.Clientes = _cadastro.ListarClientes();
             return View();
         }
 
         public IActionResult EditUser(int id)
         {
-            var user = cadastro.ListarClientes().FirstOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
+            ClienteModel cliente = _cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
 
-        [HttpPost]
-        public IActionResult EditUser(ClienteModel model)
-        {
-            if (ModelState.IsValid)
-            {
-                var user = cadastro.ListarClientes().FirstOrDefault(u => u.Id == model.Id);
-                if (user != null)
-                {
-                    user.FullName = model.FullName;
-                    user.Email = model.Email;
-                    user.Idade = model.Idade;
-                    user.Sexo = model.Sexo;
-                    user.Injury = model.Injury;
-                    user.InjuryDetails = model.InjuryDetails;
-                    user.Role = model.Role;
-                }
-                return RedirectToAction("Admin");
-            }
-            return View(model);
-        }
-
-        public IActionResult DeleteUser(int id)
-        {
-            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
             if (cliente == null)
             {
                 return NotFound();
             }
+
             return View(cliente);
         }
 
         [HttpPost]
-        public IActionResult DeleteUserConfirmed(int id)
+        public async Task<IActionResult> EditUser(ClienteModel model)
         {
-            cadastro.RemoverCliente(id);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (SqlConnection conn = new SqlConnection(_conn))
+            {
+                await conn.OpenAsync();
+                string query = @"
+                UPDATE usuarios SET 
+                    nome = @FullName,
+                    email = @Email,
+                    idade = @Idade,
+                    sexo = @Sexo,
+                    lesao = @Injury,
+                    detalhes_lesao = @InjuryDetails,
+                    tipo = @Role
+                WHERE Id = @Id";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@FullName", model.FullName);
+                    cmd.Parameters.AddWithValue("@Email", model.Email);
+                    cmd.Parameters.AddWithValue("@Idade", model.Idade);
+                    cmd.Parameters.AddWithValue("@Sexo", model.Sexo);
+                    cmd.Parameters.AddWithValue("@Injury", model.Injury ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@InjuryDetails", model.InjuryDetails ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("@Role", model.Role);
+                    cmd.Parameters.AddWithValue("@Id", model.Id);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
+            }
+
             return RedirectToAction("Admin");
         }
 
-        public IActionResult ChangeRole(int id)
+        [HttpPost]
+        public async Task<IActionResult> ChangeRole(string email, string role)
         {
-            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
-            if (cliente == null)
+            using (SqlConnection conn = new SqlConnection(_conn))
             {
-                return NotFound();
+                await conn.OpenAsync();
+                string query = "UPDATE usuarios SET role = @role WHERE email = @Email";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@role", role);
+                    cmd.Parameters.AddWithValue("@Email", email);
+
+                    await cmd.ExecuteNonQueryAsync();
+                }
             }
-            return View(cliente);
+
+            return RedirectToAction("Admin");
         }
 
         [HttpPost]
-        public IActionResult ChangeRole(int id, string role)
+        public async Task<IActionResult> DeleteUserConfirmed(string email)
         {
-            var cliente = cadastro.ListarClientes().FirstOrDefault(c => c.Id == id);
-            if (cliente != null)
+            using (SqlConnection conn = new SqlConnection(_conn))
             {
-                cliente.Role = role;
-                // Atualizar o papel no banco de dados
-                // Implementar a lógica para atualizar a role do cliente no banco de dados aqui
+                await conn.OpenAsync();
+                string query = "DELETE FROM usuarios WHERE email = @Email";
+
+                using (SqlCommand cmd = new SqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@Email", email);
+                    await cmd.ExecuteNonQueryAsync();
+                }
             }
+
             return RedirectToAction("Admin");
         }
 
