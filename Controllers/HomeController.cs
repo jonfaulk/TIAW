@@ -30,6 +30,10 @@ namespace TIAW.Controllers
             return View();
         }
 
+        public IActionResult Analytics()
+        {
+            return View();
+        }
         public IActionResult Teste()
         {
             ViewBag.Clientes = _cadastro.ListarClientes();

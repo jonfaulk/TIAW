@@ -1,0 +1,25 @@
+﻿.analytics-container {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    color: #fff;
+    background-color: #1c1c1c;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.summary p {
+    font-size: 18px;
+    margin: 5px 0;
+}
+
+.chart-section {
+    margin-bottom: 40px;
+}
+
+canvas {
+    background-color: #2c2c2c;
+    padding: 20px;
+}
