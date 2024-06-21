@@ -158,8 +158,8 @@ namespace TIAW.Controllers
                     if (!string.IsNullOrEmpty(password))
                         c1[i].Password = password;
 
-                    if (idade != null)  
-                        c1[i].Idade = idade.Value;  
+                    if (idade != null)
+                        c1[i].Idade = idade.Value;
 
                     if (!string.IsNullOrEmpty(sexo))
                         c1[i].Sexo = sexo;

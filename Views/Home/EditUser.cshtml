@@ -64,7 +64,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         $(document).ready(function () {
-            // Evento para verificar a condição de lesão
             $('#Injury').change(function () {
                 if ($(this).val() === 'sim') {
                     $('#injuryDescription').removeClass('d-none');
@@ -73,7 +72,6 @@
                 }
             });
 
-            // Exibir ou ocultar o campo de detalhes da lesão com base no valor inicial
             if ($('#Injury').val() === 'sim') {
                 $('#injuryDescription').removeClass('d-none');
             } else {

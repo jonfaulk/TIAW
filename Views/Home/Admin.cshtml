@@ -1,42 +1,43 @@
 ﻿@{
-    ViewBag.Title = "Admin Page";
+    ViewData["Title"] = "Admin";
 }
 
-<h2>Admin Page</h2>
-@if (ViewBag.Message != null)
-{
-    <div>@ViewBag.Message</div>
-}
-<h3>Existing Users</h3>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Actions</th>
-    </tr>
-    @foreach (var cliente in ViewBag.Clientes)
-    {
-        <tr>
-            <td>@cliente.Id</td>
-            <td>@cliente.FullName</td>
-            <td>@cliente.Email</td>
-            <td>@cliente.Role</td>
-            <td>
-                <form asp-action="EditUser" asp-controller="Home" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="@cliente.Id" />
-                    <button type="submit">Edit</button>
-                </form>
-                <form asp-action="DeleteUser" asp-controller="Home" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="@cliente.Id" />
-                    <button type="submit">Delete</button>
-                </form>
-                <form asp-action="ChangeRole" asp-controller="Home" method="get" style="display:inline;">
-                    <input type="hidden" name="id" value="@cliente.Id" />
-                    <button type="submit">Change Role</button>
-                </form>
-            </td>
-        </tr>
-    }
-</table>
+
+<h1>Administração de Usuários</h1>
+
+<body>
+    <div class="container">
+        <h1 class="mt-5 mb-4">Administração de Usuários</h1>
+
+        <table class="table table-bordered">
+            <thead class="thead-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Idade</th>
+                    <th>Sexo</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Id</td>
+                        <td>@user.FullName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Idade</td>
+                        <td>@user.Sexo</td>
+                        <td>
+                            <!-- Botões de ação podem ser adicionados aqui, como editar, excluir, etc. -->
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+
