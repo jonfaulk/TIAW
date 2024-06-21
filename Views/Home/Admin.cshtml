@@ -1,43 +1,82 @@
-﻿@{
-    ViewData["Title"] = "Admin";
-}
+﻿<div class="container">
+    <h1 class="mt-5 mb-4">Administração de Usuários</h1>
 
+    <table class="table table-bordered">
+        <thead class="thead-dark">
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Idade</th>
+                <th>Sexo</th>
+                <th>Cargo</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
 
-<h1>Administração de Usuários</h1>
-
-<body>
-    <div class="container">
-        <h1 class="mt-5 mb-4">Administração de Usuários</h1>
-
-        <table class="table table-bordered">
-            <thead class="thead-dark">
+        <tbody>
+            @foreach (var user in ViewBag.Clientes)
+            {
                 <tr>
-                    <th>ID</th>
-                    <th>Nome</th>
-                    <th>Email</th>
-                    <th>Idade</th>
-                    <th>Sexo</th>
-                    <th>Ações</th>
+                    <td>@user.Id</td>
+                    <td>@user.FullName</td>
+                    <td>@user.Email</td>
+                    <td>@user.Idade</td>
+                    <td>@user.Sexo</td>
+                    <td>@user.Role</td>
+                    <td>
+                        <form asp-action="PromoverCargo" method="post" id="form_promover_@user.Id" class="form-inline">
+                            <div class="form-group mr-2">
+                                <select id="Cargo_@user.Id" name="Cargo" class="form-control" required>
+                                    <option value="">Escolha uma ação</option>
+                                    <option value="Instrutor">Promover para Instrutor</option>
+                                    <option value="Admin">Promover para Admin</option>
+                                </select>
+                            </div>
+                            <input type="hidden" name="ClienteId" value="@user.Id" />
+                            <button type="submit" class="btn btn-primary btn-promover btn-promover-red" data-form-id="@user.Id">Promover</button>
+                        </form>
+
+                        <form asp-action="DeletarUsuario" method="post" id="form_excluir_@user.Id" class="form-inline">
+                            <input type="hidden" name="ClienteId" value="@user.Id" />
+                            <button type="submit" class="btn btn-primary btn-excluir btn-danger" data-form-id="@user.Id">EXCLUIR USUÁRIO</button>
+                        </form>
+                    </td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var user in Model)
-                {
-                    <tr>
-                        <td>@user.Id</td>
-                        <td>@user.FullName</td>
-                        <td>@user.Email</td>
-                        <td>@user.Idade</td>
-                        <td>@user.Sexo</td>
-                        <td>
-                            <!-- Botões de ação podem ser adicionados aqui, como editar, excluir, etc. -->
-                        </td>
-                    </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section Scripts {
+    <script>$(document).ready(function () {
+            $('.btn-promover').click(function (e) {
+                e.preventDefault();
+                var formId = $(this).data('form-id');
+                var form = $('#form_promover_' + formId);
+                var cargo = $('#Cargo_' + formId).val();
+
+                if (cargo === "") {
+                    alert('Por favor, escolha uma ação válida.');
+                    return;
                 }
-            </tbody>
-        </table>
-    </div>
 
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-</body>
+                $.post(form.attr('action'), form.serialize(), function (response) {
+                    alert('Cargo promovido com sucesso.');
+                    location.reload();
+                }).fail(function () {
+                    alert('Erro ao promover o cargo. Por favor, tente novamente.');
+                });
+            });
 
+            $('.btn-excluir').click(function (e) {
+                e.preventDefault();
+                var formId = $(this).data('form-id');
+                var form = $('#form_excluir_' + formId);
+
+                if (confirm('Deseja realmente excluir?')) {
+                    form.submit();
+                }
+            });
+        });</script>
+}

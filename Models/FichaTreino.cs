@@ -11,6 +11,7 @@ namespace TIAW.Models
         public List<string> Fichas { get; set; }
         public List<string> Exercicios { get; set; }
 
+
         public FichaTreino()
         {
             Fichas = new List<string>

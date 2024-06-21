@@ -52,8 +52,6 @@
             </div>
 
 
-
-
             <div class="form-group d-none" id="injuryDescription">
                 <label for="injuryDetails">Descreva:</label>
                 <textarea id="injuryDetails" name="injuryDetails" class="form-control"></textarea>
@@ -74,6 +72,7 @@
 @section Scripts {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>$(document).ready(function () {
+            // Evento para verificar a condição de lesão
             $('#injury').change(function () {
                 if ($(this).val() === 'sim') {
                     $('#injuryDescription').removeClass('d-none');
@@ -83,6 +82,7 @@
             });
 
 
+            // Evento para verificar a consistência das senhas
             $('#confirmPassword').blur(function () {
                 var password = $('#password').val();
                 var confirmPassword = $('#confirmPassword').val();

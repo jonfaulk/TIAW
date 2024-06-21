@@ -36,7 +36,7 @@ namespace TIAW.Controllers
 
             foreach (ClienteModel c1 in clientes)
             {
-                if (c1.FullName == "admin")
+                if (c1.FullName == "Ronaldo Instrutor" && c1.FullName == "Sara Admin")
                 {
                     contemnome = true;
                     break;
@@ -45,7 +45,10 @@ namespace TIAW.Controllers
 
             if (!contemnome)
             {
-                ClienteModel cliente = new ClienteModel("admin", "jon@g.com", "12345678", 31, "masculino", "Não", "Opa", "Não");
+
+                ClienteModel cliente = new ClienteModel("Ronaldo Instrutor", "r@g.com", "12345678", 37, "Masculino", "Instrutor");
+                ClienteModel cliente2 = new ClienteModel("Sara Admin", "s@g.com", "12345678", 25, "Feminino", "Admin");
+
                 cadastro.AdicionarCliente(cliente);
             }
 
@@ -169,8 +172,6 @@ namespace TIAW.Controllers
             return RedirectToAction("Login");
         }
 
-
-
         [HttpPost]
         public IActionResult SaveFichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios, int id)
         {
@@ -192,30 +193,52 @@ namespace TIAW.Controllers
         {
             var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email && c.Password == password);
 
-            if (cliente != null)
+            if (cliente == null)
             {
-                var claims = new List<Claim>
-                {
-                    new Claim(ClaimTypes.Name, cliente.FullName),
-                    new Claim(ClaimTypes.Email, cliente.Email)
-                };
-
-                var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-                var authProperties = new AuthenticationProperties
-                {
-                    AllowRefresh = true,
-                    IsPersistent = true,
-                    ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
-                };
-
-                await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
-
-                TempData["SuccessMessage"] = "Login realizado com sucesso!";
-                return RedirectToAction("Index", "Home");
+                ViewBag.ErrorMessage = "Email ou senha inválidos.";
+                return View();
             }
 
-            ViewBag.ErrorMessage = "Email ou senha inválidos.";
-            return View();
+            if (cliente.Password == cliente.Email)
+            {
+                ViewBag.ErrorMessage = "A senha não pode ser igual ao email.";
+                return View();
+            }
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Name, cliente.FullName),
+                new Claim(ClaimTypes.Email, cliente.Email)
+            };
+
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            var authProperties = new AuthenticationProperties
+            {
+                AllowRefresh = true,
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(30)
+            };
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity), authProperties);
+
+            if (cliente.Role == "Aluno")
+            {
+                TempData["SuccessMessage"] = "Login realizado com sucesso!";
+                return RedirectToAction("Aluno", "Home");
+            }
+            else if (cliente.Role == "Instrutor")
+            {
+                TempData["SuccessMessage"] = "Login realizado com sucesso!";
+                return RedirectToAction("Instrutor", "Home");
+            }
+            else if (cliente.Role == "Admin")
+            {
+                TempData["SuccessMessage"] = "Login realizado com sucesso!";
+                return RedirectToAction("Instrutor", "Admin");
+            }
+
+            TempData["SuccessMessage"] = "Login realizado com sucesso!";
+            return RedirectToAction("Index", "Home");
         }
 
         public async Task<IActionResult> Logout()
@@ -230,79 +253,39 @@ namespace TIAW.Controllers
             return View();
         }
 
-        public IActionResult EditUser(int id)
-        {
-            var user = cadastro.Clientes.FirstOrDefault(u => u.Id == id);
-            if (user == null)
-            {
-                return NotFound();
-            }
-            return View(user);
-        }
-
         [HttpPost]
-        public IActionResult EditUser(ClienteModel model)
+        public IActionResult PromoverCargo(string Cargo, int ClienteId)
         {
-            if (ModelState.IsValid)
+            List<ClienteModel> clientes = cadastro.Clientes;
+
+            foreach (ClienteModel cliente in clientes)
             {
-                var user = cadastro.Clientes.FirstOrDefault(u => u.Id == model.Id);
-                if (user != null)
+                if (ClienteId == cliente.Id)
                 {
-                    user.FullName = model.FullName;
-                    user.Email = model.Email;
-                    user.Idade = model.Idade;
-                    user.Sexo = model.Sexo;
-                    user.Injury = model.Injury;
-                    user.InjuryDetails = model.InjuryDetails;
-                    user.Role = model.Role;
+                    cliente.Role = Cargo;
+                    break;
                 }
-                return RedirectToAction("Admin");
             }
-            return View(model);
-        }
 
-        public IActionResult DeleteUser(int id)
-        {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-            return View(cliente);
+            return RedirectToAction("Admin"); 
         }
 
         [HttpPost]
-        public IActionResult DeleteUserConfirmed(string email)
+        public IActionResult DeletarUsuario(int ClienteId)
         {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
-            if (cliente != null)
+            List<ClienteModel> clientes = cadastro.Clientes;
+
+            foreach (ClienteModel cliente in clientes)
             {
-                cadastro.Clientes.Remove(cliente);
+                if (ClienteId == cliente.Id)
+                {
+                    clientes.Remove(cliente);
+                    break;
+                }
             }
+
             return RedirectToAction("Admin");
         }
-
-        public IActionResult ChangeRole(int id)
-        {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Id == id);
-            if (cliente == null)
-            {
-                return NotFound();
-            }
-            return View(cliente);
-        }
-
-        [HttpPost]
-        public IActionResult ChangeRole(string email, string role)
-        {
-            var cliente = cadastro.Clientes.FirstOrDefault(c => c.Email == email);
-            if (cliente != null)
-            {
-                cliente.Role = role;
-            }
-            return RedirectToAction("Admin");
-        }
-
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
