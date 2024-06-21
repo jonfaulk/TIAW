@@ -50,6 +50,7 @@ namespace TIAW.Controllers
                 ClienteModel cliente2 = new ClienteModel("Sara Admin", "s@g.com", "12345678", 25, "Feminino", "Admin");
 
                 cadastro.AdicionarCliente(cliente);
+                cadastro.AdicionarCliente(cliente2);
             }
 
             return View();
@@ -99,6 +100,10 @@ namespace TIAW.Controllers
             return View();
         }
 
+        public IActionResult Analytics()
+        {
+            return View();
+        }
 
         [HttpPost]
         public JsonResult GetOpcoesFichaTreino(string opcoesMarcadas)
@@ -234,7 +239,7 @@ namespace TIAW.Controllers
             else if (cliente.Role == "Admin")
             {
                 TempData["SuccessMessage"] = "Login realizado com sucesso!";
-                return RedirectToAction("Instrutor", "Admin");
+                return RedirectToAction("Admin", "Home");
             }
 
             TempData["SuccessMessage"] = "Login realizado com sucesso!";
@@ -267,7 +272,7 @@ namespace TIAW.Controllers
                 }
             }
 
-            return RedirectToAction("Admin"); 
+            return RedirectToAction("Admin");
         }
 
         [HttpPost]

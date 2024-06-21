@@ -1,4 +1,8 @@
-﻿<div class="container">
+﻿@{
+    ViewData["Title"] = "Admin";
+}
+
+<div class="container">
     <h1 class="mt-5 mb-4">Administração de Usuários</h1>
 
     <table class="table table-bordered">
@@ -47,6 +51,30 @@
         </tbody>
     </table>
 </div>
+
+
+<div class="analytics-container">
+    <header>
+        <h1>ANALITYCS</h1>
+        <div class="summary">
+            <p>👁️ Total de Acessos Semanal: 1000</p>
+            <p>🏋️‍♂️ Total de Instrutores: 5</p>
+            <p>👥 Total de Alunos: 40</p>
+        </div>
+    </header>
+
+    <section class="chart-section">
+        <canvas id="frequenciaChart"></canvas>
+    </section>
+    <section class="chart-section">
+        <canvas id="quantidadeAlunosMesChart"></canvas>
+    </section>
+    <section class="chart-section">
+        <canvas id="quantidadeAlunosHorarioChart"></canvas>
+        <canvas id="quantidadeAlunosSexoChart"></canvas>
+    </section>
+</div>
+
 
 @section Scripts {
     <script>$(document).ready(function () {
