@@ -6,7 +6,6 @@
     <div class="container">
         <h1 class="title">Ficha de Treino</h1>
 
-
         <div class="student-info">
             <h2 class="subtitle">Nome do Aluno : @ViewBag.nome</h2>
         </div>
@@ -47,27 +46,33 @@
     @{
         ViewData["Title"] = "Editar meu Cadastro";
     }
-
     <div class="container">
         <button id="toggleButton" class="btn btn-primary">Editar Cadastro</button>
         <div id="formContent" class="form-container" style="display:none;">
             <h2 class="cadastro">CADASTRO</h2>
-            <form asp-action="EditarCadastro" method="post">
+            <form asp-action="EditarCadastro" method="post" id="editForm">
+
+                <input type="hidden" id="id" name="id" value="@ViewBag.ID">
+
                 <div class="form-group">
-                    <label for="fullName">Informe seu nome completo:</label>
-                    <input type="text" id="fullName" name="fullName" class="form-control" value="@ViewBag.Nome" required>
+                    <label for="fullName">Seu nome salvo no cadastro é:</label>
+                    <input type="text" id="fullName" name="fullName" class="form-control" value="@ViewBag.Nome">
                 </div>
                 <div class="form-group">
-                    <label for="email">Informe seu email:</label>
-                    <input type="email" id="email" name="email" class="form-control" value="@ViewBag.Email" required>
+                    <label for="email">O seu email:</label>
+                    <input type="email" id="email" name="email" class="form-control" value="@ViewBag.Email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha antiga:</label>
+                    <input type="text" id="senhantiga" name="senhantiga" class="form-control" minlength="8" value="@ViewBag.Password" readonly required>
                 </div>
                 <div class="form-group">
                     <label for="password">Digite uma senha de 8 dígitos:</label>
-                    <input type="password" id="password" name="password" class="form-control" minlength="8" required>
+                    <input type="password" id="password" name="password" class="form-control" minlength="8">
                 </div>
                 <div class="form-group">
                     <label for="confirmPassword">Confirme a senha:</label>
-                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" minlength="8" required>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="form-control" minlength="8">
                 </div>
                 <div class="form-group">
                     <label for="idade">Informe sua idade:</label>
@@ -89,8 +94,7 @@
     </div>
 
     @section Scripts {
-        <script>// Evento para verificar a consistência das senhas
-            $('#confirmPassword').blur(function () {
+        <script>$('#confirmPassword').blur(function () {
                 var password = $('#password').val();
                 var confirmPassword = $('#confirmPassword').val();
                 if (password !== confirmPassword) {
@@ -100,16 +104,23 @@
                 }
             });
 
-            // Evento para exibir/ocultar o formulário
             $('#toggleButton').click(function () {
                 $('#formContent').toggle();
             });
 
-            // Evento para ocultar o formulário após salvar
-            $('#saveButton').click(function () {
-                $('#formContent').hide();
+            $('#editForm').submit(function (e) {
+                e.preventDefault();
+
+                $.post($(this).attr('action'), $(this).serialize(), function (response) {
+                    alert('Salvo com sucesso.');
+                    location.reload();
+                }).fail(function () {
+                    alert('Erro ao salvar. Por favor, tente novamente.');
+                });
             });</script>
     }
+
+
 
 </body>
 

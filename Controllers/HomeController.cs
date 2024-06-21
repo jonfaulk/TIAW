@@ -23,7 +23,7 @@ namespace TIAW.Controllers
         }
 
         public IActionResult Index()
-        {         
+        {
             return View();
         }
 
@@ -39,19 +39,18 @@ namespace TIAW.Controllers
                 if (c1.FullName == "admin")
                 {
                     contemnome = true;
-                    break; // Se encontrarmos um cliente com o nome "admin", podemos sair do loop
+                    break;
                 }
             }
 
             if (!contemnome)
             {
-                ClienteModel cliente = new ClienteModel("admin", "jon@g.com", "1,2,3,4,5,6,7,8", 31, "masculino", "Não", "Opa", "Não");
+                ClienteModel cliente = new ClienteModel("admin", "jon@g.com", "12345678", 31, "masculino", "Não", "Opa", "Não");
                 cadastro.AdicionarCliente(cliente);
             }
 
             return View();
         }
-
 
         [HttpPost]
         public IActionResult Cadastro(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
@@ -81,6 +80,7 @@ namespace TIAW.Controllers
             {
                 clientesFiltrados = clientes.Where(c => c.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
             }
+
             ViewBag.Clientes = clientesFiltrados;
             ViewBag.SearchTerm = searchTerm;
 
@@ -115,9 +115,11 @@ namespace TIAW.Controllers
                 {
                     if (ficha.id == cliente.Id)
                     {
+                        ViewBag.ID = cliente.Id;
                         ViewBag.Nome = cliente.FullName;
                         ViewBag.Email = cliente.Email;
                         ViewBag.Idade = cliente.Idade;
+                        ViewBag.Password = cliente.Password;
 
                         var fichaPersonalizada = TIAW.Models.FichaTreino.FichaPersonalizada(ficha.TipoSelecionado, ficha.Exercicios);
                         ViewBag.ListaPerson = fichaPersonalizada;
@@ -138,25 +140,36 @@ namespace TIAW.Controllers
             return View();
         }
 
-
         [HttpPost]
-        public IActionResult EditarCadastro(string fullName, string email, string password, int idade, string sexo)
+        public IActionResult EditarCadastro(string fullName, string email, string password, int? idade, string sexo, int id)
         {
             List<ClienteModel> c1 = cadastro.Clientes;
 
             for (int i = 0; i < c1.Count; i++)
             {
-                if (fullName == c1[i].FullName)
+                if (id == c1[i].Id)
                 {
-                    c1[i].Email = email;
-                    c1[i].Password = password;
-                    c1[i].Idade = idade;
-                    c1[i].Sexo = sexo;
+                    if (!string.IsNullOrEmpty(fullName))
+                        c1[i].FullName = fullName;
+
+                    if (!string.IsNullOrEmpty(email))
+                        c1[i].Email = email;
+
+                    if (!string.IsNullOrEmpty(password))
+                        c1[i].Password = password;
+
+                    if (idade != null)  
+                        c1[i].Idade = idade.Value;  
+
+                    if (!string.IsNullOrEmpty(sexo))
+                        c1[i].Sexo = sexo;
                 }
             }
+
             return RedirectToAction("Login");
         }
-    
+
+
 
         [HttpPost]
         public IActionResult SaveFichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios, int id)
