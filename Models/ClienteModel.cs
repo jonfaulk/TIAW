@@ -21,6 +21,7 @@ namespace TIAW.Models
         public ClienteModel(string fullName, string email, string password, int idade, string sexo, string injury, string conte, string injuryDetails)
         {
             this.Id = GenerateUniqueId();
+            //this.Id = 2;
             this.FullName = fullName;
             this.Email = email;
             this.Password = password;

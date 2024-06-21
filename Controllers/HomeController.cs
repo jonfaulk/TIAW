@@ -23,20 +23,32 @@ namespace TIAW.Controllers
         }
 
         public IActionResult Index()
-        {
+        {         
             return View();
         }
 
         public IActionResult Cadastro()
         {
             ViewBag.Clientes = cadastro.ListarClientes();
-            return View();
-        }
 
+            var clientes = cadastro.ListarClientes();
+            bool contemnome = false;
 
-        public IActionResult Teste()
-        {
-            ViewBag.Clientes = cadastro.ListarClientes();
+            foreach (ClienteModel c1 in clientes)
+            {
+                if (c1.FullName == "admin")
+                {
+                    contemnome = true;
+                    break; // Se encontrarmos um cliente com o nome "admin", podemos sair do loop
+                }
+            }
+
+            if (!contemnome)
+            {
+                ClienteModel cliente = new ClienteModel("admin", "jon@g.com", "1,2,3,4,5,6,7,8", 31, "masculino", "Não", "Opa", "Não");
+                cadastro.AdicionarCliente(cliente);
+            }
+
             return View();
         }
 
@@ -60,29 +72,30 @@ namespace TIAW.Controllers
             return View();
         }
 
-
-
-
         public IActionResult Instrutor(string searchTerm)
         {
             var clientes = cadastro.ListarClientes();
+            List<ClienteModel> clientesFiltrados = new List<ClienteModel>();
 
             if (!string.IsNullOrEmpty(searchTerm))
             {
-                clientes = clientes.Where(c => c.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+                clientesFiltrados = clientes.Where(c => c.FullName.Contains(searchTerm, StringComparison.OrdinalIgnoreCase)).ToList();
+            }
+            ViewBag.Clientes = clientesFiltrados;
+            ViewBag.SearchTerm = searchTerm;
+
+            if (clientesFiltrados.Any())
+            {
+                ViewBag.ID = clientesFiltrados.First().Id;
             }
             else
             {
-                clientes = new List<ClienteModel>();
+                ViewBag.ID = null;
             }
-
-            FichaTreino fichaTreino = new FichaTreino();
-            ViewBag.Fichas = fichaTreino.Fichas;
-            ViewBag.Clientes = clientes;
-            ViewBag.SearchTerm = searchTerm;
 
             return View();
         }
+
 
         [HttpPost]
         public JsonResult GetOpcoesFichaTreino(string opcoesMarcadas)
@@ -91,46 +104,69 @@ namespace TIAW.Controllers
             return Json(opcoesFichaTreino);
         }
 
-        public IActionResult Aluno(string nome)
+        public IActionResult Aluno()
         {
-            var fichaTreino = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
-            if (fichaTreino != null)
-            {
-                var fichaPerson = TIAW.Models.FichaTreino.FichaPersonalizada(fichaTreino.TipoSelecionado, fichaTreino.Exercicios);
+            List<ClienteModel> clientes = cadastro.Clientes;
+            bool fichaEncontrada = false;
 
-               ViewBag.nome = nome;
-               ViewBag.ListaPerson = fichaPerson;
-                return View();
+            foreach (FichaTreino ficha in fichasTreino)
+            {
+                foreach (ClienteModel cliente in clientes)
+                {
+                    if (ficha.id == cliente.Id)
+                    {
+                        ViewBag.Nome = cliente.FullName;
+                        ViewBag.Email = cliente.Email;
+                        ViewBag.Idade = cliente.Idade;
+
+                        var fichaPersonalizada = TIAW.Models.FichaTreino.FichaPersonalizada(ficha.TipoSelecionado, ficha.Exercicios);
+                        ViewBag.ListaPerson = fichaPersonalizada;
+
+                        fichaEncontrada = true;
+                        break;
+                    }
+                }
             }
 
-            ViewBag.ErrorMessage = "Ficha de treino não encontrada.";
+            if (!fichaEncontrada)
+            {
+                ViewBag.ErrorMessage = "Ficha de treino não encontrada. bb";
+            }
+
+            ViewBag.fichasTreino = fichasTreino;
+
             return View();
         }
 
 
+        [HttpPost]
+        public IActionResult EditarCadastro(string fullName, string email, string password, int idade, string sexo)
+        {
+            List<ClienteModel> c1 = cadastro.Clientes;
+
+            for (int i = 0; i < c1.Count; i++)
+            {
+                if (fullName == c1[i].FullName)
+                {
+                    c1[i].Email = email;
+                    c1[i].Password = password;
+                    c1[i].Idade = idade;
+                    c1[i].Sexo = sexo;
+                }
+            }
+            return RedirectToAction("Login");
+        }
+    
 
         [HttpPost]
-        public IActionResult SaveFichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios)
+        public IActionResult SaveFichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios, int id)
         {
-            var fichaTreino = new FichaTreino(nome, tipoSelecionado, exercicios);
-            // Verifica se já existe uma ficha para o aluno
-            var fichaExistente = fichasTreino.FirstOrDefault(f => f.NomeAluno == nome);
-            if (fichaExistente != null)
-            {
-                // Atualiza a ficha existente
-                fichaExistente.TipoSelecionado = tipoSelecionado;
-                fichaExistente.Exercicios = exercicios;
-            }
-            else
-            {
-                // Adiciona a nova ficha à lista
-                fichasTreino.Add(fichaTreino);
-            }
 
-            return Json(new { success = true });
+            FichaTreino ficha = new FichaTreino(nome, tipoSelecionado, exercicios, id);
+            fichasTreino.Add(ficha);
+
+            return Json(new { success = true, ID = id });
         }
-
-
 
 
         public IActionResult Login()

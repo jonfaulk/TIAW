@@ -24,6 +24,9 @@ builder.Services.AddSession(options =>
 
 builder.Services.AddHttpContextAccessor();
 
+// Add the Cadastro service to the container
+builder.Services.AddSingleton<Cadastro>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

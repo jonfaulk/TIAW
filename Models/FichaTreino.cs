@@ -5,6 +5,7 @@ namespace TIAW.Models
     public class FichaTreino
     {
         public string NomeAluno { get; set; }
+        public int id { get; set; }
         public string Tipo { get; set; }
         public List<string> TipoSelecionado { get; set; }
         public List<string> Fichas { get; set; }
@@ -21,11 +22,12 @@ namespace TIAW.Models
             };
         }
 
-        public FichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios)
+        public FichaTreino(string nome, List<string> tipoSelecionado, List<string> exercicios, int id)
         {
-            NomeAluno = nome;
-            TipoSelecionado = tipoSelecionado;
-            Exercicios = exercicios;
+            this.NomeAluno = nome;
+            this.TipoSelecionado = tipoSelecionado;
+            this.Exercicios = exercicios;
+            this.id = id;
         }
 
         public static List<string> MontarFicha(string opcoesMarcadas)

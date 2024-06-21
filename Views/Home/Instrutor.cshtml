@@ -2,6 +2,7 @@
     ViewBag.Title = "Instrutor";
     var fichaTreino = new TIAW.Models.FichaTreino();
 }
+
 <div class="container">
     <h2>Pesquisar Alunos</h2>
 
@@ -28,7 +29,7 @@
                         <tr>
                             <td>@cliente.FullName</td>
                             <td>
-                                <button type="button" class="add-aluno" data-fullname="@cliente.FullName" data-fichatreino="@cliente.Conte">Adicionar</button>
+                                <button type="button" class="add-aluno" data-id="@cliente.Id" data-fullname="@cliente.FullName" data-fichatreino="@cliente.Conte">Adicionar</button>
                             </td>
                         </tr>
                     }
@@ -41,7 +42,7 @@
         <p>Nenhum aluno encontrado.</p>
     }
 
-    <h2>Alunos Selecionados:</h2>
+    <h2>Alunos Selecionados:@ViewBag.ID</h2>
     <table class="table" id="alunosSelecionados">
         <thead>
             <tr>
@@ -81,139 +82,145 @@
         </div>
     </div>
 
-
     <button type="button" id="createAnotherTrainingButton">Criar mais um tipo de treino</button>
     <button type="button" id="saveFichaTreinoButton">Salvar Ficha de Treino</button>
 </div>
-<script>document.addEventListener('DOMContentLoaded', function () {
-        var treinoContainer = document.getElementById('treinoContainer');
-        var formOpcoesTreinoTemplate = treinoContainer.querySelector('.formOpcoesTreino').cloneNode(true);
-        var formOpcoesFichaTreinoTemplate = treinoContainer.querySelector('.formOpcoesFichaTreino').cloneNode(true);
-
-        function setupTreinoFormHandlers(formOpcoesTreino, formOpcoesFichaTreino) {
-            var selectTreinoElement = formOpcoesTreino.querySelector('.opcaoTreinoSelect');
-            var tipoTreinoHeader = formOpcoesTreino.querySelector('.tipoTreinoHeader');
-
-            formOpcoesFichaTreino.querySelector('.addExerciseButton').addEventListener('click', function () {
-                var newSelect = document.createElement('select');
-                newSelect.name = 'opcaoFichaTreino';
-                newSelect.classList.add('opcaoFichaTreinoSelect');
-
-                var options = formOpcoesFichaTreino.querySelector('select').querySelectorAll('option');
-                options.forEach(function (option) {
-                    var newOption = document.createElement('option');
-                    newOption.value = option.value;
-                    newOption.text = option.text;
-                    newSelect.appendChild(newOption);
-                });
-
-                formOpcoesFichaTreino.insertBefore(newSelect, formOpcoesFichaTreino.querySelector('.addExerciseButton'));
-            });
-
-            selectTreinoElement.addEventListener('change', function () {
-                formOpcoesFichaTreino.querySelectorAll('select:not(.opcaoFichaTreinoSelect)').forEach(function (select) {
-                    select.remove();
-                });
-                formOpcoesFichaTreino.querySelector('.opcaoFichaTreinoSelect').value = '';
-
-                var selectedText = selectTreinoElement.options[selectTreinoElement.selectedIndex].text;
-                tipoTreinoHeader.textContent = 'Tipo de treino: ' + selectedText;
-
-                var opcoesMarcadas = selectTreinoElement.value;
-
-                $.ajax({
-                    type: 'POST',
-                    url: '/Home/GetOpcoesFichaTreino',
-                    data: { 'opcoesMarcadas': opcoesMarcadas },
-                    success: function (data) {
-                        var opcaoFichaTreinoSelect = formOpcoesFichaTreino.querySelector('.opcaoFichaTreinoSelect');
-                        opcaoFichaTreinoSelect.innerHTML = '<option value="" disabled selected>Selecione</option>';
-                        data.forEach(function (item) {
-                            opcaoFichaTreinoSelect.innerHTML += '<option value="' + item + '">' + item + '</option>';
-                        });
-                    }
-                });
-            });
-        }
-
-        $(document).ready(function () {
-            setupTreinoFormHandlers(treinoContainer.querySelector('.formOpcoesTreino'), treinoContainer.querySelector('.formOpcoesFichaTreino'));
-
-            $('.add-aluno').click(function () {
-                var fullName = $(this).data('fullname');
-                var fichaTreino = $(this).data('fichatreino');
-
-                $('#alunosSelecionados tbody').append(
-                    '<tr>' +
-                    '<td>' + fullName + '</td>' +
-                    '<td><button type="button" class="remove-aluno">Remover</button></td>' +
-                    '</tr>'
-                );
-
-                $('#resultadosPesquisa tbody').empty();
-                $('#searchTerm').val('');
-            });
-
-            $(document).on('click', '.remove-aluno', function () {
-                $(this).closest('tr').remove();
-            });
-
-            $('#createAnotherTrainingButton').click(function () {
-                var treinoBlock = document.createElement('div');
-                treinoBlock.classList.add('treinoBlock');
-
-                var newFormOpcoesTreino = formOpcoesTreinoTemplate.cloneNode(true);
-                var newFormOpcoesFichaTreino = formOpcoesFichaTreinoTemplate.cloneNode(true);
-
-                treinoBlock.appendChild(newFormOpcoesTreino);
-                treinoBlock.appendChild(newFormOpcoesFichaTreino);
-                treinoContainer.appendChild(treinoBlock);
-
-                setupTreinoFormHandlers(newFormOpcoesTreino, newFormOpcoesFichaTreino);
-            });
-        });
-
-        $(document).ready(function () {
-            $('#saveFichaTreinoButton').click(function () {
-                var nome = $('#alunosSelecionados tbody tr td:first-child').text();
-
-                var tipoSelecionado = [];
-                $('.opcaoTreinoSelect').each(function () {
-                    tipoSelecionado.push($(this).val());
-                });
-
-                var exercicios = [];
-                $('.opcaoFichaTreinoSelect').each(function () {
-                    exercicios.push($(this).val());
-                });
-
-                $.ajax({
-                    url: '/Home/SaveFichaTreino',
-                    type: 'POST',
-                    data: {
-                        nome: nome,
-                        tipoSelecionado: JSON.stringify(tipoSelecionado),
-                        exercicios: JSON.stringify(exercicios)
-                    },
-                    success: function (response) {
-                        alert('Ficha de treino salva com sucesso!');
-                        window.location.href = '/Home/Aluno?nome=' + nome;
-                    },
-                    error: function (xhr, status, error) {
-                        alert('Erro ao salvar ficha de treino: ' + error);
-                    }
-                });
-            });
-        });
-
-
-
-    });</script>
-
-
 
 @section Scripts {
     <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.5.1.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var treinoContainer = document.getElementById('treinoContainer');
+            var formOpcoesTreinoTemplate = treinoContainer.querySelector('.formOpcoesTreino').cloneNode(true);
+            var formOpcoesFichaTreinoTemplate = treinoContainer.querySelector('.formOpcoesFichaTreino').cloneNode(true);
+
+            function setupTreinoFormHandlers(formOpcoesTreino, formOpcoesFichaTreino) {
+                var selectTreinoElement = formOpcoesTreino.querySelector('.opcaoTreinoSelect');
+                var tipoTreinoHeader = formOpcoesTreino.querySelector('.tipoTreinoHeader');
+
+                formOpcoesFichaTreino.querySelector('.addExerciseButton').addEventListener('click', function () {
+                    var newSelect = document.createElement('select');
+                    newSelect.name = 'opcaoFichaTreino';
+                    newSelect.classList.add('opcaoFichaTreinoSelect');
+
+                    var options = formOpcoesFichaTreino.querySelector('select').querySelectorAll('option');
+                    options.forEach(function (option) {
+                        var newOption = document.createElement('option');
+                        newOption.value = option.value;
+                        newOption.text = option.text;
+                        newSelect.appendChild(newOption);
+                    });
+
+                    formOpcoesFichaTreino.insertBefore(newSelect, formOpcoesFichaTreino.querySelector('.addExerciseButton'));
+                });
+
+                selectTreinoElement.addEventListener('change', function () {
+                    formOpcoesFichaTreino.querySelectorAll('select:not(.opcaoFichaTreinoSelect)').forEach(function (select) {
+                        select.remove();
+                    });
+                    formOpcoesFichaTreino.querySelector('.opcaoFichaTreinoSelect').value = '';
+
+                    var selectedText = selectTreinoElement.options[selectTreinoElement.selectedIndex].text;
+                    tipoTreinoHeader.textContent = 'Tipo de treino: ' + selectedText;
+
+                    var opcoesMarcadas = selectTreinoElement.value;
+
+                    $.ajax({
+                        type: 'POST',
+                        url: '/Home/GetOpcoesFichaTreino',
+                        data: { 'opcoesMarcadas': opcoesMarcadas },
+                        success: function (data) {
+                            var opcaoFichaTreinoSelect = formOpcoesFichaTreino.querySelector('.opcaoFichaTreinoSelect');
+                            opcaoFichaTreinoSelect.innerHTML = '<option value="" disabled selected>Selecione</option>';
+                            data.forEach(function (item) {
+                                opcaoFichaTreinoSelect.innerHTML += '<option value="' + item + '">' + item + '</option>';
+                            });
+                        }
+                    });
+                });
+            }
+
+            $(document).ready(function () {
+                setupTreinoFormHandlers(treinoContainer.querySelector('.formOpcoesTreino'), treinoContainer.querySelector('.formOpcoesFichaTreino'));
+
+                // Delegue o evento de clique para o botão "Adicionar"
+                $(document).on('click', '.add-aluno', function () {
+                    var fullName = $(this).data('fullname');
+                    var fichaTreino = $(this).data('fichatreino');
+                    var id = $(this).data('id');
+
+                    $('#alunosSelecionados tbody').append(
+                        '<tr>' +
+                        '<td data-id="' + id + '">' + fullName + '</td>' +
+                        '<td><button type="button" class="remove-aluno">Remover</button></td>' +
+                        '</tr>'
+                    );
+
+                    $(this).closest('tr').remove();
+                });
+
+                // Evento de clique para remover aluno
+                $(document).on('click', '.remove-aluno', function () {
+                    $(this).closest('tr').remove();
+                });
+
+                $('#createAnotherTrainingButton').click(function () {
+                    var treinoBlock = document.createElement('div');
+                    treinoBlock.classList.add('treinoBlock');
+
+                    var newFormOpcoesTreino = formOpcoesTreinoTemplate.cloneNode(true);
+                    var newFormOpcoesFichaTreino = formOpcoesFichaTreinoTemplate.cloneNode(true);
+
+                    treinoBlock.appendChild(newFormOpcoesTreino);
+                    treinoBlock.appendChild(newFormOpcoesFichaTreino);
+                    treinoContainer.appendChild(treinoBlock);
+
+                    setupTreinoFormHandlers(newFormOpcoesTreino, newFormOpcoesFichaTreino);
+                });
+            });
+
+            $(document).ready(function () {
+                $('#saveFichaTreinoButton').click(function () {
+                    var alunos = [];
+                    $('#alunosSelecionados tbody tr').each(function () {
+                        var id = $(this).find('td[data-id]').data('id');
+                        var nome = $(this).find('td[data-id]').text();
+                        alunos.push({ id: id, nome: nome });
+                    });
+
+                    var tipoSelecionado = [];
+                    $('.opcaoTreinoSelect').each(function () {
+                        tipoSelecionado.push($(this).val());
+                    });
+
+                    var exercicios = [];
+                    $('.opcaoFichaTreinoSelect').each(function () {
+                        exercicios.push($(this).val());
+                    });
+
+                    var id = @ViewBag.Id;
+
+                    $.ajax({
+                        url: '/Home/SaveFichaTreino',
+                        type: 'POST',
+                        data: {
+                            alunos: JSON.stringify(alunos),
+                            tipoSelecionado: JSON.stringify(tipoSelecionado),
+                            exercicios: JSON.stringify(exercicios),
+                            id: id
+                        },
+                        success: function (response) {
+                            alert('Ficha de treino salva com sucesso!');
+                            console.log("Resposta do servidor: ", response);
+                            window.location.href = '/Home/Aluno?nome=' + alunos[0].nome;
+                        },
+                        error: function (xhr, status, error) {
+                            console.error("Erro na requisição: ", error);
+                            alert('Erro ao salvar ficha de treino: ' + error);
+                        }
+                    });
+                });
+            });
+        });
+    </script>
 }
-
-
